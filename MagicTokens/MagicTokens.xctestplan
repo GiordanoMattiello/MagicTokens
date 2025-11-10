@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "C5C8BE77-6FD4-4F6B-80BB-4386608C0D66",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:MagicTokens.xcodeproj",
+      "identifier" : "6179A5A02EC1182200C1FA5B",
+      "name" : "MagicTokens"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:MagicTokens.xcodeproj",
+        "identifier" : "6179A5B62EC1182500C1FA5B",
+        "name" : "MagicTokensTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:MagicTokens.xcodeproj",
+        "identifier" : "6179A5C02EC1182500C1FA5B",
+        "name" : "MagicTokensUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
