@@ -20,7 +20,7 @@ final class AppCoordinatorTests: XCTestCase {
         sut = AppCoordinator(navigationController: navigationControllerMock)
     }
 
-    func test_start_setsTokenListViewControllerAsRoot() {
+    func testStartSetsTokenListViewControllerAsRoot() {
         // Given
 
         // When

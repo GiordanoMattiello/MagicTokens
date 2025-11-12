@@ -9,8 +9,8 @@ Include import Foundation and import UIKit (if necessary).
 
 For each method:
 
-Create a variable callCount (e.g., fetchDataCallCount).
+Create a variable callCount (e.g., fetchDataCallCount) and use Private set.
 
-Create variables to store received parameters (received...).
+Create variables to store received parameters (received...) and use Private set.
 
 Create a returnValue variable (e.g., fetchDataReturnValue) when the method has a return type.

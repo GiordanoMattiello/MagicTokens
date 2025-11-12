@@ -9,7 +9,7 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
+    var window: UIWindowProtocol = UIWindow(frame: UIScreen.main.bounds)
     var appCoordinator: AppCoordinator?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -20,12 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIInterfaceOrientationMask.portrait
     }
     
+    // MARK: - Private Methods
+    
     private func setupInitial() {
         let navigationController = UINavigationController()
-        
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
+        window.rootViewController = navigationController
+        window.makeKeyAndVisible()
         
         appCoordinator = AppCoordinator(navigationController: navigationController)
         appCoordinator?.startApp()

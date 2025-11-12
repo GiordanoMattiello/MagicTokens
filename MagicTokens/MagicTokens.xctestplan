@@ -23,14 +23,6 @@
         "identifier" : "6179A5B62EC1182500C1FA5B",
         "name" : "MagicTokensTests"
       }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:MagicTokens.xcodeproj",
-        "identifier" : "6179A5C02EC1182500C1FA5B",
-        "name" : "MagicTokensUITests"
-      }
     }
   ],
   "version" : 1

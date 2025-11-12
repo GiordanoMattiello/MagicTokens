@@ -6,15 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		61F323DD2EC36EDD00884035 /* CommonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 61F323DC2EC36EDD00884035 /* CommonKit */; };
+		61F323DF2EC36FF200884035 /* CommonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 61F323DE2EC36FF200884035 /* CommonKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		6179A5B82EC1182500C1FA5B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6179A5992EC1182200C1FA5B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6179A5A02EC1182200C1FA5B;
-			remoteInfo = MagicTokens;
-		};
-		6179A5C22EC1182500C1FA5B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6179A5992EC1182200C1FA5B /* Project object */;
 			proxyType = 1;
@@ -26,8 +24,8 @@
 /* Begin PBXFileReference section */
 		6179A5A12EC1182200C1FA5B /* MagicTokens.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MagicTokens.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6179A5B72EC1182500C1FA5B /* MagicTokensTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MagicTokensTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6179A5C12EC1182500C1FA5B /* MagicTokensUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MagicTokensUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61F323BC2EC2790300884035 /* MagicTokens.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MagicTokens.xctestplan; sourceTree = "<group>"; };
+		61F323DA2EC36EB200884035 /* CommonKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -49,11 +47,6 @@
 			path = MagicTokens;
 			sourceTree = "<group>";
 		};
-		6179A5C42EC1182500C1FA5B /* MagicTokensUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MagicTokensUITests;
-			sourceTree = "<group>";
-		};
 		61FAF0B52EC11FED00A2765E /* MagicTokensTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = MagicTokensTests;
@@ -66,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61F323DF2EC36FF200884035 /* CommonKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,13 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6179A5BE2EC1182500C1FA5B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				61F323DD2EC36EDD00884035 /* CommonKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,11 +77,12 @@
 		6179A5982EC1182200C1FA5B = {
 			isa = PBXGroup;
 			children = (
+				61F323DA2EC36EB200884035 /* CommonKit */,
 				61F323BC2EC2790300884035 /* MagicTokens.xctestplan */,
 				6179A5A32EC1182200C1FA5B /* MagicTokens */,
-				6179A5C42EC1182500C1FA5B /* MagicTokensUITests */,
 				6179A5A22EC1182200C1FA5B /* Products */,
 				61FAF0B52EC11FED00A2765E /* MagicTokensTests */,
+				61F323DB2EC36EDD00884035 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,9 +91,15 @@
 			children = (
 				6179A5A12EC1182200C1FA5B /* MagicTokens.app */,
 				6179A5B72EC1182500C1FA5B /* MagicTokensTests.xctest */,
-				6179A5C12EC1182500C1FA5B /* MagicTokensUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		61F323DB2EC36EDD00884035 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,6 +122,7 @@
 			);
 			name = MagicTokens;
 			packageProductDependencies = (
+				61F323DE2EC36FF200884035 /* CommonKit */,
 			);
 			productName = MagicTokens;
 			productReference = 6179A5A12EC1182200C1FA5B /* MagicTokens.app */;
@@ -150,33 +146,11 @@
 			);
 			name = MagicTokensTests;
 			packageProductDependencies = (
+				61F323DC2EC36EDD00884035 /* CommonKit */,
 			);
 			productName = MagicTokensTests;
 			productReference = 6179A5B72EC1182500C1FA5B /* MagicTokensTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		6179A5C02EC1182500C1FA5B /* MagicTokensUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6179A5D22EC1182500C1FA5B /* Build configuration list for PBXNativeTarget "MagicTokensUITests" */;
-			buildPhases = (
-				6179A5BD2EC1182500C1FA5B /* Sources */,
-				6179A5BE2EC1182500C1FA5B /* Frameworks */,
-				6179A5BF2EC1182500C1FA5B /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6179A5C32EC1182500C1FA5B /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				6179A5C42EC1182500C1FA5B /* MagicTokensUITests */,
-			);
-			name = MagicTokensUITests;
-			packageProductDependencies = (
-			);
-			productName = MagicTokensUITests;
-			productReference = 6179A5C12EC1182500C1FA5B /* MagicTokensUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -192,10 +166,6 @@
 						CreatedOnToolsVersion = 16.3;
 					};
 					6179A5B62EC1182500C1FA5B = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 6179A5A02EC1182200C1FA5B;
-					};
-					6179A5C02EC1182500C1FA5B = {
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = 6179A5A02EC1182200C1FA5B;
 					};
@@ -217,7 +187,6 @@
 			targets = (
 				6179A5A02EC1182200C1FA5B /* MagicTokens */,
 				6179A5B62EC1182500C1FA5B /* MagicTokensTests */,
-				6179A5C02EC1182500C1FA5B /* MagicTokensUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -231,13 +200,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		6179A5B52EC1182500C1FA5B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6179A5BF2EC1182500C1FA5B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -261,13 +223,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6179A5BD2EC1182500C1FA5B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -275,11 +230,6 @@
 			isa = PBXTargetDependency;
 			target = 6179A5A02EC1182200C1FA5B /* MagicTokens */;
 			targetProxy = 6179A5B82EC1182500C1FA5B /* PBXContainerItemProxy */;
-		};
-		6179A5C32EC1182500C1FA5B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6179A5A02EC1182200C1FA5B /* MagicTokens */;
-			targetProxy = 6179A5C22EC1182500C1FA5B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -297,6 +247,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -304,9 +255,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mattiello.giordano.magictokens.MagicTokens;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -323,6 +278,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -330,9 +286,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mattiello.giordano.magictokens.MagicTokens;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -465,7 +425,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N8H5SWXWAZ;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mattiello.giordano.magictokens.MagicTokensTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -484,7 +444,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N8H5SWXWAZ;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mattiello.giordano.magictokens.MagicTokensTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -492,40 +452,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MagicTokens.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MagicTokens";
-			};
-			name = Release;
-		};
-		6179A5D32EC1182500C1FA5B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = N8H5SWXWAZ;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = mattiello.giordano.magictokens.MagicTokensUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MagicTokens;
-			};
-			name = Debug;
-		};
-		6179A5D42EC1182500C1FA5B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = N8H5SWXWAZ;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = mattiello.giordano.magictokens.MagicTokensUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MagicTokens;
 			};
 			name = Release;
 		};
@@ -559,16 +485,18 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6179A5D22EC1182500C1FA5B /* Build configuration list for PBXNativeTarget "MagicTokensUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6179A5D32EC1182500C1FA5B /* Debug */,
-				6179A5D42EC1182500C1FA5B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		61F323DC2EC36EDD00884035 /* CommonKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CommonKit;
+		};
+		61F323DE2EC36FF200884035 /* CommonKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CommonKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6179A5992EC1182200C1FA5B /* Project object */;
 }

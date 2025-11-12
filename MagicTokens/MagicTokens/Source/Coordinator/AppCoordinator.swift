@@ -6,16 +6,40 @@
 //
 
 import UIKit
+import CommonKit
+
+enum MagicTokenScenes {
+    case tokenList
+    case tokenDisplay
+}
 
 class AppCoordinator {
-    private let navigationController: UINavigationControllerProtocol
+    var navigationController: UINavigationControllerProtocol
+    var networkManager: NetworkManagerProtocol
+    var jsonTransformer: DataTransformer
+    var imageTransformer: DataTransformer
+    var imageCacheManager: ImageCacheManagerProtocol
 
-    init(navigationController: UINavigationControllerProtocol) {
+    init(navigationController: UINavigationControllerProtocol,
+         networkManager: NetworkManagerProtocol = NetworkManager(),
+         jsonTransformer: DataTransformer = JSONDecoderTransformer(),
+         imageTransformer: DataTransformer = ImageDecoderTransformer(),
+         imageCacheManager: ImageCacheManagerProtocol = ImageCacheManager(),
+         ) {
         self.navigationController = navigationController
+        self.networkManager = networkManager
+        self.jsonTransformer = jsonTransformer
+        self.imageTransformer = imageTransformer
+        self.imageCacheManager = imageCacheManager
     }
 
+    @MainActor
     func startApp() {
-        let tokenListViewController = TokenListViewController()
+        let tokenListViewController = makeTokenListScene()
         navigationController.setViewControllers([tokenListViewController], animated: false)
+    }
+    
+    func navigateTo(viewController: UIViewController, animated: Bool = true) {
+        navigationController.pushViewController(viewController,animated: animated)
     }
 }

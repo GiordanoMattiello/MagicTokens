@@ -10,12 +10,10 @@ import XCTest
 
 final class AppDelegateTests: XCTestCase {
     var sut: AppDelegate!
-    
-    // Mocks
-    var navigationControllerMock: UINavigationControllerMock!
+    var windowMock: UIWindowProtocolMock!
     
     override func setUp() {
-        navigationControllerMock = UINavigationControllerMock()
+        windowMock = UIWindowProtocolMock()
         
         sut = AppDelegate()
     }
@@ -23,12 +21,18 @@ final class AppDelegateTests: XCTestCase {
     func testStartApp() {
         // Given
         let application = UIApplication.shared
+        sut.appCoordinator = nil
+        windowMock.rootViewController = nil
+        sut.window = windowMock
 
         // When
         let returnValue = sut.application(application, didFinishLaunchingWithOptions: nil)
 
         // Then
         XCTAssertTrue(returnValue)
+        XCTAssertNotNil(sut.appCoordinator)
+        XCTAssertNotNil(windowMock.rootViewController)
+        XCTAssertEqual(windowMock.makeKeyAndVisibleCallCount,1)
     }
     
     func testSupportedInterfaceOrientations() {

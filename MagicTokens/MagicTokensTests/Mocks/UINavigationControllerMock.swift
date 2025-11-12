@@ -9,12 +9,21 @@ import UIKit
 @testable import MagicTokens
 
 class UINavigationControllerMock: UINavigationControllerProtocol {
+    private(set) var pushViewControllerCallCount = 0
+    private(set) var receivedPushViewController: UIViewController?
+    private(set) var receivedPushAnimated: Bool?
+    func pushViewController(_ viewController: UIViewController, animated: Bool) {
+        pushViewControllerCallCount += 1
+        receivedPushViewController = viewController
+        receivedPushAnimated = animated
+    }
+    
     private(set) var setViewControllersCallCount = 0
-    private(set) var receivedViewControllers: [UIViewController]?
-    private(set) var receivedAnimated: Bool?
+    private(set) var receivedSetViewControllers: [UIViewController]?
+    private(set) var receivedSetAnimated: Bool?
     func setViewControllers(_ viewControllers: [UIViewController], animated: Bool) {
-        receivedViewControllers = viewControllers
-        receivedAnimated = animated
+        receivedSetViewControllers = viewControllers
+        receivedSetAnimated = animated
         setViewControllersCallCount += 1
     }
 }
