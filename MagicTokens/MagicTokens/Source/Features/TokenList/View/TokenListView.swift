@@ -27,13 +27,14 @@ final class TokenListView: UIView, TokenListViewProtocol {
     private var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemBackground
         return collectionView
     }()
     
     init(dataSource: TokenListDataSourceProtocol = TokenListDataSource()) {
         self.dataSource = dataSource
         super.init(frame: .zero)
-        self.backgroundColor = .white
+        self.backgroundColor = .systemBackground
         
         setupSubViews()
         setupLayout()

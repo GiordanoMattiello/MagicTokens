@@ -13,6 +13,7 @@ protocol TokenListDataSourceProtocol: UICollectionViewDataSource, UICollectionVi
 }
 
 final class TokenListDataSource: NSObject, TokenListDataSourceProtocol {
+    private let cardProportion = 0.71568627451
     private var tokens: [Token] = []
     weak var delegate: TokenListViewControllerDelegate?
     
@@ -41,12 +42,16 @@ final class TokenListDataSource: NSObject, TokenListDataSourceProtocol {
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedToken = tokens[indexPath.row]
+        delegate?.didSelectToken(selectedToken)
+    }
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        
-        CGSize(width: 146/2, height: 204/2)
+        let width = 146.0
+        return CGSize(width: 146, height: width / cardProportion )
     }
     
     private func loadImage(with imageUrl: String, completion: @escaping (UIImage)->Void ) {

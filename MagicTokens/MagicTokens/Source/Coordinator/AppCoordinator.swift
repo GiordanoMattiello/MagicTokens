@@ -38,8 +38,4 @@ class AppCoordinator {
         let tokenListViewController = makeTokenListScene()
         navigationController.setViewControllers([tokenListViewController], animated: false)
     }
-    
-    func navigateTo(viewController: UIViewController, animated: Bool = true) {
-        navigationController.pushViewController(viewController,animated: animated)
-    }
 }

@@ -13,6 +13,7 @@ protocol TokenListViewModelProtocol: ObservableObject {
     func fetchTokens(url: String) async
     func fetchNextPageTokens() async
     func loadImageFromURL(url: String) async -> UIImage?
+    func didSelectToken(_ token: Token)
     
     var tokens: [Token] { get set }
     var tokensPublisher: Published<[Token]>.Publisher { get }
@@ -22,6 +23,7 @@ final class TokenListViewModel: TokenListViewModelProtocol {
     private let adapter: TokenListAdapterProtocol
     private let networkManager: NetworkManagerProtocol
     private let imageCacheManager: ImageCacheManagerProtocol
+    private let coordinator: TokenDisplayCoordinator
     
     @Published var tokens: [Token] = []
     var tokensPublisher: Published<[Token]>.Publisher { $tokens }
@@ -29,10 +31,12 @@ final class TokenListViewModel: TokenListViewModelProtocol {
     
     init(adapter: TokenListAdapterProtocol,
          networkManager: NetworkManagerProtocol,
-         imageCacheManager: ImageCacheManagerProtocol) {
+         imageCacheManager: ImageCacheManagerProtocol,
+         coordinator: TokenDisplayCoordinator) {
         self.adapter = adapter
         self.networkManager = networkManager
         self.imageCacheManager = imageCacheManager
+        self.coordinator = coordinator
     }
     
     func fetchNextPageTokens() async {
@@ -70,5 +74,9 @@ final class TokenListViewModel: TokenListViewModelProtocol {
             return image
         }
         return nil
+    }
+    
+    func didSelectToken(_ token: Token) {
+        coordinator.navigateToTokenDisplayScene(token: token)
     }
 }

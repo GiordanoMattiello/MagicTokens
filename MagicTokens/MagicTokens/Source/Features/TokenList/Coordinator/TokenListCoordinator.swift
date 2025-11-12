@@ -14,7 +14,8 @@ extension AppCoordinator {
         let view = TokenListView()
         let viewModel = TokenListViewModel(adapter: adapter,
                                            networkManager: networkManager,
-                                           imageCacheManager: imageCacheManager)
+                                           imageCacheManager: imageCacheManager,
+                                           coordinator: self)
         return TokenListViewController(contentView: view, viewModel: viewModel)
     }
 }

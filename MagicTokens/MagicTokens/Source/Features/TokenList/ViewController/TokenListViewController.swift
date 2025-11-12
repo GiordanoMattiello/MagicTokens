@@ -12,6 +12,7 @@ import Combine
 protocol TokenListViewControllerDelegate: AnyObject {
     func loadImageFromURL(url: String) async throws -> UIImage?
     func fetchNextPageTokens() async
+    func didSelectToken(_ token: Token)
 }
 
 final class TokenListViewController: UIViewController {
@@ -37,6 +38,19 @@ final class TokenListViewController: UIViewController {
         title = "Magic Tokens"
         contentView.delegate = self
         setupBindings()
+        
+        contentView.reloadView()
+        Task {
+            await viewModel.fetchTokens(url: url)
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func loadView() {
+        view = contentView
     }
     
     private func setupBindings() {
@@ -48,17 +62,6 @@ final class TokenListViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        contentView.reloadView()
-        Task {
-            await viewModel.fetchTokens(url: url)
-        }
-    }
-    
-    override func loadView() {
-        view = contentView
-    }
 }
 
 extension TokenListViewController: TokenListViewControllerDelegate {
@@ -68,5 +71,9 @@ extension TokenListViewController: TokenListViewControllerDelegate {
     
     func fetchNextPageTokens() async {
         await viewModel.fetchNextPageTokens()
+    }
+    
+    func didSelectToken(_ token: Token) {
+        viewModel.didSelectToken(token)
     }
 }
