@@ -38,15 +38,12 @@ final class TokenListViewController: UIViewController {
         title = "Magic Tokens"
         contentView.delegate = self
         setupBindings()
-        
-        contentView.reloadView()
-        Task {
-            await viewModel.fetchTokens(url: url)
-        }
+        fetchTokens()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupRightBarButton()
     }
     
     override func loadView() {
@@ -60,6 +57,40 @@ final class TokenListViewController: UIViewController {
                 self?.contentView.updateTokens(tokens)
             }
             .store(in: &cancellables)
+        
+        viewModel.showErrorPublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] showError in
+                if showError {
+                    self?.showErrorAlert(message: "Não foi possível carregar os tokens.",
+                                   secondaryCompletion: { [weak self] in
+                        self?.fetchTokens()
+                        self?.viewModel.showError = false
+                    })
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func fetchTokens() {
+        Task {
+            await viewModel.fetchTokens(url: url)
+        }
+    }
+    
+    private func setupRightBarButton() {
+        let rightButton = UIBarButtonItem(
+            title: "Filtro",
+            style: .plain,
+            target: self,
+            action: #selector(rightButtonTapped)
+        )
+        
+        navigationItem.rightBarButtonItem = rightButton
+    }
+    
+    @objc private func rightButtonTapped(){
+        viewModel.didTapRightButton()
     }
     
 }

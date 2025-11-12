@@ -14,9 +14,14 @@ protocol TokenListViewModelProtocol: ObservableObject {
     func fetchNextPageTokens() async
     func loadImageFromURL(url: String) async -> UIImage?
     func didSelectToken(_ token: Token)
+    func didTapRightButton()
+    
     
     var tokens: [Token] { get set }
     var tokensPublisher: Published<[Token]>.Publisher { get }
+    
+    var showError: Bool { get set }
+    var showErrorPublisher: Published<Bool>.Publisher { get }
 }
 
 final class TokenListViewModel: TokenListViewModelProtocol {
@@ -27,6 +32,10 @@ final class TokenListViewModel: TokenListViewModelProtocol {
     
     @Published var tokens: [Token] = []
     var tokensPublisher: Published<[Token]>.Publisher { $tokens }
+    
+    @Published var showError: Bool = false
+    var showErrorPublisher: Published<Bool>.Publisher { $showError }
+    
     private var nextPageURL: String?
     
     init(adapter: TokenListAdapterProtocol,
@@ -46,26 +55,27 @@ final class TokenListViewModel: TokenListViewModelProtocol {
     }
     
     func fetchTokens(url: String) async {
-        nextPageURL = nil
+        let request = TokenListRequest(url: nextPageURL ?? url)
+        // Todo Ligar Loading
         do {
-            let response: TokenListResponse? = try await networkManager.executeRequest(request: TokenListRequest(url: url),
+            let response: TokenListResponse? = try await networkManager.executeRequest(request: request,
                                                                                        transformerType: .json)
             nextPageURL = response?.nextPage
+            // Todo desligar Loading
             guard let tokens = response?.tokens else { return }
             self.tokens += tokens.compactMap { [weak self] scryToken in
                 self?.adapter.tokenAdapt(scryToken)
             }
         } catch {
-            // TODO implement Error
+            showError = true
+            // Todo desligar Loading
         }
     }
     func loadImageFromURL(url: String) async -> UIImage? {
         let request = TokenListImageRequest(url: url)
-        
         if let cachedImage = imageCacheManager.getCache(from: url) {
             return cachedImage
         }
-        
         let dataImage: Data? = try? await networkManager.executeRequest(request: request,
                                                             transformerType: .image)
         
@@ -78,5 +88,9 @@ final class TokenListViewModel: TokenListViewModelProtocol {
     
     func didSelectToken(_ token: Token) {
         coordinator.navigateToTokenDisplayScene(token: token)
+    }
+    
+    func didTapRightButton() {
+        coordinator.navigateToTokenDisplayScene(token: tokens.randomElement()!)
     }
 }
