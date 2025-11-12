@@ -24,7 +24,7 @@ struct TokenScryFall: Codable {
     let imageUris: ImageUris?
     let manaCost: String?
     let cmc: Double?
-    let typeLine: String?
+    let typeLine: String
     let oracleText: String?
     let power: String?
     let toughness: String?
