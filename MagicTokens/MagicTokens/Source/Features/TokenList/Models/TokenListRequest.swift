@@ -10,6 +10,7 @@ import CommonKit
 struct TokenListRequest: NetworkRequest {
     let url: String
     let method: NetworkMethod = .get
+    let transformerType: TransformerType = .json
     
     init(url: String) {
         self.url = url

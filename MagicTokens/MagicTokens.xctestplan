@@ -4,7 +4,15 @@
       "id" : "C5C8BE77-6FD4-4F6B-80BB-4386608C0D66",
       "name" : "Test Scheme Action",
       "options" : {
-
+        "coverage" : {
+          "gatherCoverageForTests" : true,
+          "targets" : [
+            {
+              "containerPath" : "MagicTokens.xcodeproj",
+              "identifier" : "MagicTokens"
+            }
+          ]
+        }
       }
     }
   ],
@@ -22,6 +30,14 @@
         "containerPath" : "container:MagicTokens.xcodeproj",
         "identifier" : "6179A5B62EC1182500C1FA5B",
         "name" : "MagicTokensTests"
+      }
+    },
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:CommonKit",
+        "identifier" : "CommonKitTests",
+        "name" : "CommonKitTests"
       }
     }
   ],

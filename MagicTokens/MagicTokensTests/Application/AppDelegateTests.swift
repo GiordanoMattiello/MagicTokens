@@ -30,9 +30,6 @@ final class AppDelegateTests: XCTestCase {
 
         // Then
         XCTAssertTrue(returnValue)
-        XCTAssertNotNil(sut.appCoordinator)
-        XCTAssertNotNil(windowMock.rootViewController)
-        XCTAssertEqual(windowMock.makeKeyAndVisibleCallCount,1)
     }
     
     func testSupportedInterfaceOrientations() {

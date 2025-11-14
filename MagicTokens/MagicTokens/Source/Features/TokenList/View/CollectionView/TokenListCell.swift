@@ -7,13 +7,17 @@
 
 import UIKit
 
-final class TokenListCell: UICollectionViewCell {
+protocol TokenListCellProtocol where Self: UICollectionViewCell {
+    func configure(with image: UIImage?)
+}
+
+class TokenListCell: UICollectionViewCell, TokenListCellProtocol {
     static let reuseIdentifier = String(describing: TokenListCell.self)
-    private var currentTask: URLSessionDataTask?
     
     private let imageViewContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.accessibilityIdentifier = "imageViewContainer"
         return view
     }()
 
@@ -21,16 +25,14 @@ final class TokenListCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.accessibilityIdentifier = "imageView"
         return imageView
     }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        imageView.layer.cornerRadius = frame.height * 0.02
-        imageView.layer.masksToBounds = true
-
-        imageViewContainer.layer.shadowColor = UIColor.black.cgColor
+        imageViewContainer.layer.shadowColor = UIColor.systemBackground.inverted()?.cgColor
         imageViewContainer.layer.shadowOpacity = 0.75
         imageViewContainer.layer.shadowOffset = CGSize(width: 0, height: 3)
         imageViewContainer.layer.shadowRadius = frame.height * 0.02
@@ -42,12 +44,9 @@ final class TokenListCell: UICollectionViewCell {
         setupLayout()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
     
     override func prepareForReuse() {
@@ -74,6 +73,7 @@ final class TokenListCell: UICollectionViewCell {
     }
 
     func configure(with image: UIImage?) {
-        imageView.image = image
+        let imageCornerRadius = image?.withRoundedCorners(radius: frame.width * Constants.cardBorderProportion)
+        imageView.image = imageCornerRadius
     }
 }

@@ -8,7 +8,6 @@
 import UIKit
 
 protocol TokenListViewProtocol where Self: UIView {
-    func reloadView()
     func updateTokens(_ tokens: [Token])
     
     var delegate: TokenListViewControllerDelegate? { get set }
@@ -47,12 +46,6 @@ final class TokenListView: UIView, TokenListViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func reloadView() {
-        DispatchQueue.main.async { [weak self] in
-            self?.collectionView.reloadData()
-        }
-    }
-    
     func updateTokens(_ tokens: [Token]) {
         dataSource.updateTokens(tokens)
         reloadView()
@@ -60,12 +53,23 @@ final class TokenListView: UIView, TokenListViewProtocol {
     
     // MARK: - Private Methods
     
+    private func reloadView() {
+        Task { @MainActor [weak self]  in
+            self?.collectionView.reloadData()
+        }
+    }
+    
     private func setupSubViews() {
         addSubview(collectionView)
     }
     
     private func setupLayout() {
-        configureCollectionViewLayout()
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = 8
+        layout.minimumLineSpacing = 8
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        collectionView.collectionViewLayout = layout
     }
     
     private func setupConstraints() {
@@ -81,14 +85,5 @@ final class TokenListView: UIView, TokenListViewProtocol {
         collectionView.dataSource = dataSource
         collectionView.delegate = dataSource
         collectionView.register(TokenListCell.self, forCellWithReuseIdentifier: TokenListCell.reuseIdentifier)
-    }
-    
-    private func configureCollectionViewLayout() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = 8
-        layout.minimumLineSpacing = 8
-        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-        collectionView.collectionViewLayout = layout
     }
 }

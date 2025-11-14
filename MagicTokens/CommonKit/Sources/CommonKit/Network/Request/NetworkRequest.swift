@@ -10,4 +10,5 @@ import Foundation
 public protocol NetworkRequest {
     var url: String { get }
     var method: NetworkMethod { get }
+    var transformerType: TransformerType { get }
 }

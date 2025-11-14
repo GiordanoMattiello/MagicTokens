@@ -13,22 +13,21 @@ final class AppCoordinatorTests: XCTestCase {
     
     // Mocks
     var navigationControllerMock: UINavigationControllerMock!
+    var dependencyMock: DependencyContainerMock!
     
     override func setUp() {
         navigationControllerMock = UINavigationControllerMock()
         
         sut = AppCoordinator(navigationController: navigationControllerMock)
     }
-
+    
+    @MainActor
     func testStartSetsTokenListViewControllerAsRoot() {
-        // Given
-
         // When
         sut.startApp()
-
+        
         // Then
-        XCTAssertEqual(navigationControllerMock.setViewControllersCallCount,1)
-        XCTAssertNotNil(navigationControllerMock.receivedViewControllers)
-        XCTAssertEqual(navigationControllerMock.receivedAnimated, false)
+        XCTAssertEqual(navigationControllerMock.setViewControllersCallCount, 1)
+        XCTAssertTrue(navigationControllerMock.receivedSetViewControllers?.first is TokenListViewController)
     }
 }

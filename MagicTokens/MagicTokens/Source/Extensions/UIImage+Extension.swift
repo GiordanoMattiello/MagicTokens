@@ -15,7 +15,7 @@ extension UIImage {
         defer { UIGraphicsEndImageContext() }
         
         let context = UIGraphicsGetCurrentContext()
-        let path = UIBezierPath(roundedRect: rect, cornerRadius: radius).cgPath
+        let path = UIBezierPath(roundedRect: rect, cornerRadius: max(0, radius)).cgPath
         
         context?.addPath(path)
         context?.clip()

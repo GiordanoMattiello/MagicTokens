@@ -10,6 +10,7 @@ import CommonKit
 struct TokenDisplayViewRequest: NetworkRequest {
     let url: String
     let method: NetworkMethod = .get
+    let transformerType: TransformerType = .image
     
     init(url: String) {
         self.url = url

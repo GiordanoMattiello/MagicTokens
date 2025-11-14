@@ -10,6 +10,7 @@ import CommonKit
 struct TokenListImageRequest: NetworkRequest {
     let url: String
     let method: NetworkMethod = .get
+    let transformerType: TransformerType = .image
     
     init(url: String) {
         self.url = url

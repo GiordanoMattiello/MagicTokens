@@ -7,15 +7,13 @@
 
 import UIKit
 
-class StyledNavigationController: UINavigationController {
-    
-    static var shared: StyledNavigationController?
-    
+class StyledNavigationController: UINavigationController, UINavigationControllerProtocol {
     override init(nibName nibNameOrNil: String? = nil, bundle nibBundleOrNil: Bundle? = nil) {
         super.init(nibName: nil,bundle: nil)
         setupNavBar()
     }
     
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         return nil
     }

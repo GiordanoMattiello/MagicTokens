@@ -12,14 +12,11 @@ public protocol NetworkExecutorProtocol {
 }
 
 public final class NetworkExecutor: NetworkExecutorProtocol {
-    private let session: URLSession
-    private let dispatchQueue: DispatchQueue
+    private let session: URLSessionProtocol
 
     
-    public init(session: URLSession = .shared,
-                dispatchQueue: DispatchQueue = DispatchQueue.main) {
+    public init(session: URLSessionProtocol = URLSession.shared) {
         self.session = session
-        self.dispatchQueue = dispatchQueue
     }
     
     public func execute(request: any NetworkRequest) async throws -> Data? {
@@ -28,16 +25,19 @@ public final class NetworkExecutor: NetworkExecutorProtocol {
         }
 
         do {
-            let (data, response) = try await session.data(for: urlRequest)
-            
+            let (data, response) = try await session.data(for: urlRequest, delegate: nil)
             if let error = NetworkError(response) {
                 throw error
             }
             
             return data
-        } catch {
+        } catch let error {
+            if error is NetworkError {
+                throw error
+            }
             throw NetworkError(error)
         }
+        
     }
     
     private func makeURLRequest(_ url: String,_ method: String) -> URLRequest? {

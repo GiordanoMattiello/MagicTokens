@@ -1,5 +1,5 @@
 //
-//  NetworkManager.swift
+//  NetworkService.swift
 //  CommonKit
 //
 //  Created by Giordano Mattiello on 11/11/25.
@@ -7,12 +7,11 @@
 
 import Foundation
 
-public protocol NetworkManagerProtocol {
-    func executeRequest<T: Decodable>(request: any NetworkRequest,
-                                      transformerType: TransformerType) async throws -> T?
+public protocol NetworkServiceProtocol {
+    func executeRequest<T: Decodable>(request: any NetworkRequest) async throws -> T?
 }
 
-public struct NetworkManager: NetworkManagerProtocol {
+public final class NetworkService: NetworkServiceProtocol {
     private let executor: NetworkExecutorProtocol
     private let jsonTransformer: DataTransformer
     private let imageTransformer: DataTransformer
@@ -25,17 +24,15 @@ public struct NetworkManager: NetworkManagerProtocol {
         self.imageTransformer = imageTransformer
     }
     
-    public func executeRequest<T: Decodable>(request: any NetworkRequest,
-                                             transformerType: TransformerType = .json) async throws -> T? {
+    public func executeRequest<T: Decodable>(request: any NetworkRequest) async throws -> T? {
         let transformer: DataTransformer
-        switch transformerType {
+        switch request.transformerType {
         case .json:
             transformer = jsonTransformer
         case .image:
             transformer = imageTransformer
         }
         let data = try await executor.execute(request: request)
-        
         return transformer.transform(data)
     }
 }

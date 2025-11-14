@@ -16,15 +16,17 @@ protocol TokenListViewControllerDelegate: AnyObject {
 }
 
 final class TokenListViewController: UIViewController {
-    private let url = "https://api.scryfall.com/cards/search?q=type=token"
     private let contentView: TokenListViewProtocol
     private var viewModel: any TokenListViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
+    private let url: String
     
     init(contentView: TokenListViewProtocol,
-         viewModel: any TokenListViewModelProtocol) {
+         viewModel: any TokenListViewModelProtocol,
+         url: String = Strings.tokenListURL) {
         self.contentView = contentView
         self.viewModel = viewModel
+        self.url = url
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,8 +39,8 @@ final class TokenListViewController: UIViewController {
         super.viewDidLoad()
         title = "Magic Tokens"
         contentView.delegate = self
-        setupBindings()
         fetchTokens()
+        setupBindings()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,6 +55,7 @@ final class TokenListViewController: UIViewController {
     private func setupBindings() {
         viewModel.tokensPublisher
             .receive(on: RunLoop.main)
+            .dropFirst()
             .sink { [weak self] tokens in
                 self?.contentView.updateTokens(tokens)
             }
@@ -60,13 +63,10 @@ final class TokenListViewController: UIViewController {
         
         viewModel.showErrorPublisher
             .receive(on: RunLoop.main)
+            .dropFirst()
             .sink { [weak self] showError in
                 if showError {
-                    self?.showErrorAlert(message: "Não foi possível carregar os tokens.",
-                                   secondaryCompletion: { [weak self] in
-                        self?.fetchTokens()
-                        self?.viewModel.showError = false
-                    })
+                    self?.viewModel.presentError()
                 }
             }
             .store(in: &cancellables)

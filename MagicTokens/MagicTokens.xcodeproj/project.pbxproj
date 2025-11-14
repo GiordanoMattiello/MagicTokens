@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		61077E862EC69C4900C54038 /* CommonKitTestSources in Frameworks */ = {isa = PBXBuildFile; productRef = 61077E852EC69C4900C54038 /* CommonKitTestSources */; };
 		61F323DD2EC36EDD00884035 /* CommonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 61F323DC2EC36EDD00884035 /* CommonKit */; };
 		61F323DF2EC36FF200884035 /* CommonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 61F323DE2EC36FF200884035 /* CommonKit */; };
 /* End PBXBuildFile section */
@@ -68,6 +69,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				61F323DD2EC36EDD00884035 /* CommonKit in Frameworks */,
+				61077E862EC69C4900C54038 /* CommonKitTestSources in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +149,7 @@
 			name = MagicTokensTests;
 			packageProductDependencies = (
 				61F323DC2EC36EDD00884035 /* CommonKit */,
+				61077E852EC69C4900C54038 /* CommonKitTestSources */,
 			);
 			productName = MagicTokensTests;
 			productReference = 6179A5B72EC1182500C1FA5B /* MagicTokensTests.xctest */;
@@ -488,6 +491,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		61077E852EC69C4900C54038 /* CommonKitTestSources */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CommonKitTestSources;
+		};
 		61F323DC2EC36EDD00884035 /* CommonKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CommonKit;

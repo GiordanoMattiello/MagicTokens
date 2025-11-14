@@ -13,7 +13,6 @@ protocol TokenListDataSourceProtocol: UICollectionViewDataSource, UICollectionVi
 }
 
 final class TokenListDataSource: NSObject, TokenListDataSourceProtocol {
-    private let cardProportion = 0.71568627451
     private var tokens: [Token] = []
     weak var delegate: TokenListViewControllerDelegate?
     
@@ -26,7 +25,7 @@ final class TokenListDataSource: NSObject, TokenListDataSourceProtocol {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TokenListCell.reuseIdentifier, for: indexPath) as? TokenListCell else {
+        guard  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TokenListCell.reuseIdentifier, for: indexPath) as? TokenListCellProtocol else {
             return UICollectionViewCell()
         }
         self.loadImage(with: tokens[indexPath.row].smallImageURL) { image in
@@ -50,18 +49,16 @@ final class TokenListDataSource: NSObject, TokenListDataSourceProtocol {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = 146.0
-        return CGSize(width: 146, height: width / cardProportion )
+        let width = Constants.smallCardWidth
+        return CGSize(width: width, height: width / Constants.cardProportion )
     }
     
     private func loadImage(with imageUrl: String, completion: @escaping (UIImage)->Void ) {
         Task {
-            do {
-                let image: UIImage? = try await delegate?.loadImageFromURL(url: imageUrl)
-                guard let image = image else {return}
-                await MainActor.run {
-                    completion(image)
-                }
+            let image: UIImage? = try? await delegate?.loadImageFromURL(url: imageUrl)
+            guard let image = image else {return}
+            await MainActor.run {
+                completion(image)
             }
         }
     }

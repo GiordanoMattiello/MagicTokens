@@ -26,4 +26,20 @@ class UINavigationControllerMock: UINavigationControllerProtocol {
         receivedSetAnimated = animated
         setViewControllersCallCount += 1
     }
+    
+    private(set) var presentCallCount = 0
+    private(set) var receivedViewControllerToPresent: UIViewController?
+    private(set) var receivedPresentAnimated: Bool?
+    func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?) {
+        presentCallCount += 1
+        receivedViewControllerToPresent = viewControllerToPresent
+        receivedPresentAnimated = flag
+        completion?()
+    }
+    
+    func present(_ viewControllerToPresent: UIViewController, animated flag: Bool) {
+        presentCallCount += 1
+        receivedViewControllerToPresent = viewControllerToPresent
+        receivedPresentAnimated = flag
+    }
 }

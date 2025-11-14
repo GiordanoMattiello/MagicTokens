@@ -8,13 +8,17 @@
 import UIKit
 import CommonKit
 
-extension AppCoordinator {
+protocol TokenListCoordinator {
+    func makeTokenListScene() -> UIViewController
+}
+
+extension AppCoordinator: TokenListCoordinator {
     func makeTokenListScene() -> UIViewController {
         let adapter = TokenListAdapter()
         let view = TokenListView()
         let viewModel = TokenListViewModel(adapter: adapter,
-                                           networkManager: networkManager,
-                                           imageCacheManager: imageCacheManager,
+                                           networkManager: dependencies.makeNetworkManager(),
+                                           imageCacheManager: dependencies.makeImageCacheManager(),
                                            coordinator: self)
         return TokenListViewController(contentView: view, viewModel: viewModel)
     }

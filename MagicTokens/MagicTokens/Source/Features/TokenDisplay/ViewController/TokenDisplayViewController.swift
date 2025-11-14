@@ -10,11 +10,14 @@ import UIKit
 final class TokenDisplayViewController: UIViewController {
     private var viewModel: TokenDisplayViewModelProtocol
     private let contentView: TokenDisplayViewProtocol
+    private var idleTimer: IdleTimer
     
     init(contentView: TokenDisplayViewProtocol,
-         viewModel: TokenDisplayViewModelProtocol) {
+         viewModel: TokenDisplayViewModelProtocol,
+         idleTimer: IdleTimer = UIApplication.shared) {
         self.contentView = contentView
         self.viewModel = viewModel
+        self.idleTimer = idleTimer
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -32,13 +35,13 @@ final class TokenDisplayViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadImage()
-        UIApplication.shared.isIdleTimerDisabled = true
+        idleTimer.isIdleTimerDisabled = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        UIApplication.shared.isIdleTimerDisabled = false
+        idleTimer.isIdleTimerDisabled = false
     }
     
     override func loadView() {

@@ -18,11 +18,6 @@ public class JSONDecoderTransformer: DataTransformer {
         guard let data = data, !data.isEmpty else {
             return nil
         }
-        do {
-            return try decoder.decode(T.self, from: data)
-        } catch let error {
-            print(error)
-            return nil
-        }
+        return try? decoder.decode(T.self, from: data)
     }
 }

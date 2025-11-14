@@ -12,17 +12,14 @@ protocol TokenDisplayViewProtocol where Self: UIView  {
 }
 
 final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
-    
-    private let cardProportion = 0.71568627451
-    
     // MARK: - SubViews
     
     private var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        //imageView.clipsToBounds = true
         imageView.backgroundColor = .systemBackground
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.accessibilityIdentifier = "imageView"
         return imageView
     }()
     
@@ -48,7 +45,7 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
     }
     
     private func calculateCornerRadius() -> CGFloat {
-        return (bounds.width * 0.075)
+        return (bounds.width * Constants.cardBorderProportion)
     }
     
     // MARK: - Private Methods

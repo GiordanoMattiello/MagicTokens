@@ -14,10 +14,10 @@ protocol TokenDisplayViewModelProtocol {
 }
 
 final class TokenDisplayViewModel: TokenDisplayViewModelProtocol {
-    private let networkManager: NetworkManagerProtocol
+    private let networkManager: NetworkServiceProtocol
     let token: Token
     
-    init(networkManager: NetworkManagerProtocol,
+    init(networkManager: NetworkServiceProtocol,
          token: Token) {
         self.networkManager = networkManager
         self.token = token
@@ -25,8 +25,7 @@ final class TokenDisplayViewModel: TokenDisplayViewModelProtocol {
     
     func loadLargeImage() async -> UIImage? {
         let request = TokenDisplayViewRequest(url: token.largeImageURL)
-        let dataImage: Data? = try? await networkManager.executeRequest(request: request,
-                                                            transformerType: .image)
+        let dataImage: Data? = try? await networkManager.executeRequest(request: request)
         if let dataImage = dataImage, let image = UIImage(data: dataImage) {
             return image
         }
