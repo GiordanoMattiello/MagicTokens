@@ -22,7 +22,14 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
         imageView.accessibilityIdentifier = "tokenImageView"
         imageView.isAccessibilityElement = true
         imageView.accessibilityLabel = "Imagem do token"
+        imageView.alpha = 0
         return imageView
+    }()
+    
+    private let loadingView: LoadingView = {
+        let view = LoadingView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     init() {
@@ -38,9 +45,27 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
     }
 
     func configure(model: TokenDisplayScreenModel) {
-        self.imageView.image = processImage(model.image)
+        let processedImage = processImage(model.image)
+        self.imageView.image = processedImage
+        
         // TODO: - Make accessibilityLabel from token data like "elf - warrior power: 1/ tougnes: 1"
         self.imageView.accessibilityLabel = "Imagem carregada"
+        
+        if model.isLoading {
+            loadingView.show()
+            imageView.alpha = 0
+        } else {
+            loadingView.hide()
+            if processedImage != nil {
+                animateImageAppearance()
+            }
+        }
+    }
+    
+    private func animateImageAppearance() {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            self.imageView.alpha = 1.0
+        }
     }
     
     private func processImage(_ image: UIImage?) -> UIImage? {
@@ -59,6 +84,8 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
     
     private func setupSubViews() {
         addSubview(imageView)
+        addSubview(loadingView)
+        bringSubviewToFront(loadingView)
     }
     
     private func setupConstraints() {
@@ -66,7 +93,12 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
             imageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            imageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            
+            loadingView.topAnchor.constraint(equalTo: topAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 }

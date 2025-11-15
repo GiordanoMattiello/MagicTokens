@@ -33,13 +33,16 @@ final class TokenDisplayViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupBindings()
-        
-        viewModel.loadImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         idleTimer.isIdleTimerDisabled = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.loadImage()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

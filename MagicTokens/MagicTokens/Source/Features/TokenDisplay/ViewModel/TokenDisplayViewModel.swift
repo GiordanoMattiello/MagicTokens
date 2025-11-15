@@ -18,34 +18,36 @@ protocol TokenDisplayViewModelProtocol {
 
 final class TokenDisplayViewModel: TokenDisplayViewModelProtocol {
     private let networkManager: NetworkServiceProtocol
-    private let coordinator: AlertErrorCoordinator & LoadingCoordinator
+    private let coordinator: AlertErrorCoordinator
     private let taskManager: TaskManagerProtocol
     
     @Published private(set) var screenModel: TokenDisplayScreenModel
+    
     var screenModelPublisher: Published<TokenDisplayScreenModel>.Publisher { $screenModel }
     
     init(networkManager: NetworkServiceProtocol,
          token: Token,
-         coordinator: AlertErrorCoordinator & LoadingCoordinator,
+         coordinator: AlertErrorCoordinator,
          taskManager: TaskManagerProtocol = TaskManager()) {
         self.networkManager = networkManager
         self.coordinator = coordinator
         self.taskManager = taskManager
-        self.screenModel = TokenDisplayScreenModel(token: token, image: nil)
+        self.screenModel = TokenDisplayScreenModel(token: token, image: nil, isLoading: false)
     }
     
     func loadImage() {
-        coordinator.showLoading(loading: true)
+        screenModel.isLoading = true
+        
         taskManager.execute {
             do {
                 let image = try await self.loadLargeImage()
                 await MainActor.run { [weak self] in
-                    self?.coordinator.showLoading(loading: false)
+                    self?.screenModel.isLoading = false
                     self?.screenModel.image = image
                 }
             } catch {
                 await MainActor.run { [weak self] in
-                    self?.coordinator.showLoading(loading: false)
+                    self?.screenModel.isLoading = false
                     self?.presentError()
                 }
             }

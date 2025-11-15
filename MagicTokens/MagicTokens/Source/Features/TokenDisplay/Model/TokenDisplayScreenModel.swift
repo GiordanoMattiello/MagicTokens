@@ -10,9 +10,11 @@ import UIKit
 struct TokenDisplayScreenModel {
     var token: Token
     var image: UIImage?
+    var isLoading: Bool
     
-    init(token: Token, image: UIImage? = nil) {
+    init(token: Token, image: UIImage? = nil, isLoading: Bool = false) {
         self.token = token
         self.image = image
+        self.isLoading = isLoading
     }
 }
