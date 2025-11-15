@@ -9,17 +9,16 @@
 import UIKit
 
 final class TokenListViewMock: UIView, TokenListViewProtocol {
-
     // MARK: - Delegate
     var delegate: TokenListViewControllerDelegate?
 
     // MARK: - updateTokens
-    private(set) var updateTokensCallCount = 0
-    private(set) var updateTokensReceivedTokens: [Token]?
-    var updateTokensCompletion: (()->Void)?
-    func updateTokens(_ tokens: [Token]) {
-        updateTokensCallCount += 1
-        updateTokensReceivedTokens = tokens
-        updateTokensCompletion?()
+    private(set) var configureCallCount = 0
+    private(set) var configureReceivedModel: TokenListScreenModel?
+    var configureCompletion: (()->Void)?
+    func configure(model: TokenListScreenModel) {
+        configureCallCount += 1
+        configureReceivedModel = model
+        configureCompletion?()
     }
 }

@@ -10,14 +10,9 @@ import UIKit
 import Combine
 
 final class TokenListViewModelMock: TokenListViewModelProtocol {
-
     // MARK: - Published Properties
-    
-    @Published var tokens: [Token] = []
-    var tokensPublisher: Published<[Token]>.Publisher { $tokens }
-
-    @Published var showError: Bool = false
-    var showErrorPublisher: Published<Bool>.Publisher { $showError }
+    @Published var screenModel: TokenListScreenModel = TokenListScreenModel(tokens: [])
+    var screenModelPublisher: Published<MagicTokens.TokenListScreenModel>.Publisher { $screenModel }
 
     // MARK: - fetchTokens
     private(set) var fetchTokensCallCount = 0
@@ -59,11 +54,13 @@ final class TokenListViewModelMock: TokenListViewModelProtocol {
         didTapRightButtonCallCount += 1
     }
 
-    // MARK: - presentError
-    private(set) var presentErrorCallCount = 0
-    var presentErrorCompletion: (()->Void)?
-    func presentError() {
-        presentErrorCallCount += 1
-        presentErrorCompletion?()
+    
+    private(set) var fetchTokensWithFilterCallCount = 0
+    private(set) var fetchTokensWithFilterReceivedURL: String?
+    var fetchTokensWithFilterCompletion: (()->Void)?
+    func fetchTokensWithFilter(url: String) async {
+        fetchTokensWithFilterCallCount += 1
+        fetchTokensWithFilterReceivedURL = url
+        fetchTokensWithFilterCompletion?()
     }
 }

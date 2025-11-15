@@ -10,4 +10,6 @@ struct Token: Equatable {
     let largeImageURL: String
     let name: String
     let type: String
+    let power: String?
+    let toughness: String?
 }
