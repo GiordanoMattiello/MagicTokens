@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TokenDisplayViewProtocol where Self: UIView  {
-    func configure(image: UIImage?)
+    func configure(model: TokenDisplayScreenModel)
 }
 
 final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
@@ -19,7 +19,9 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .systemBackground
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.accessibilityIdentifier = "imageView"
+        imageView.accessibilityIdentifier = "tokenImageView"
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityLabel = "Imagem do token"
         return imageView
     }()
     
@@ -34,18 +36,23 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    func configure(model: TokenDisplayScreenModel) {
+        self.imageView.image = processImage(model.image)
+        // TODO: - Make accessibilityLabel from token data like "elf - warrior power: 1/ tougnes: 1"
+        self.imageView.accessibilityLabel = "Imagem carregada"
+    }
     
-    func configure(image: UIImage?) {
-        if let image = image {
-            let roundedImage = image.withRoundedCorners(radius: calculateCornerRadius())
-            self.imageView.image = roundedImage
-        } else {
-            self.imageView.image = nil
-        }
+    private func processImage(_ image: UIImage?) -> UIImage? {
+        image?.withRoundedCorners(radius: calculateCornerRadius())
     }
     
     private func calculateCornerRadius() -> CGFloat {
-        return (bounds.width * Constants.cardBorderProportion)
+        let width = bounds.width > 0 ? bounds.width : frame.width
+        guard width > 0 else {
+            return Constants.cardBorderProportion * 100
+        }
+        return width * Constants.cardBorderProportion
     }
     
     // MARK: - Private Methods

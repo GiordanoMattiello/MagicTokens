@@ -20,7 +20,8 @@ extension AppCoordinator: TokenDisplayCoordinator {
     private func makeTokenDisplayScene(token: Token) -> UIViewController {
         let view = TokenDisplayView()
         let viewModel = TokenDisplayViewModel(networkManager: dependencies.makeNetworkManager(),
-                                              token: token)
+                                              token: token,
+                                              coordinator: self)
         return TokenDisplayViewController(contentView: view,
                                           viewModel: viewModel)
     }
