@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct TokenDisplayScreenModel {
+struct TokenDisplayScreenModel: Equatable {
     var token: Token
     var image: UIImage?
     var isLoading: Bool

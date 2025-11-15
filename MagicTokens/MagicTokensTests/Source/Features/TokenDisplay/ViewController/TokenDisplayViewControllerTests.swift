@@ -25,7 +25,6 @@ final class TokenDisplayViewControllerTests: XCTestCase {
     func testViewDidLoadShouldSetNavigationTitle() {
         // Given
         let navigationControllerMock = UINavigationController(rootViewController: sut)
-        viewModelMock.token = Token.stub()
         
         // When
         sut.viewDidLoad()
@@ -67,7 +66,7 @@ final class TokenDisplayViewControllerTests: XCTestCase {
         sut.viewWillDisappear(true)
         
         // Then
-        XCTAssertFalse(UIApplication.shared.isIdleTimerDisabled)
+        XCTAssertFalse(idleTimerMock.isIdleTimerDisabled)
     }
     
     
@@ -79,23 +78,19 @@ final class TokenDisplayViewControllerTests: XCTestCase {
         XCTAssertTrue(sut.view === viewContentMock)
     }
     
-    @MainActor
-    func testLoadImageShouldConfigureContentViewWithImage() async {
+    func testTokensPublisherWhenScreenModelChange() {
         // Given
-        let expectation = expectation(description: "A imagem deve ser carregada e configurada")
-        
-        let expectedImage = UIImage(systemName: "photo")
-        viewModelMock.loadLargeImageReturnValue = expectedImage
+        sut.viewDidLoad()
+        let expectation = expectation(description: "Update screenModel")
         viewContentMock.onCompleteConfigure = {
             expectation.fulfill()
         }
         
         // When
-        sut.viewWillAppear(true)
-        
-        await fulfillment(of: [expectation])
-        XCTAssertEqual(viewContentMock.configureCallCount, 1)
-        XCTAssertEqual(viewModelMock.loadLargeImageCallCount, 1)
-        XCTAssertEqual(viewContentMock.receivedImage, expectedImage)
+        viewModelMock.screenModel = .init(token: .stub())
+   
+        // Then
+        waitForExpectations()
+        XCTAssertEqual(viewContentMock.receivedScreenModel, .init(token: .stub()))
     }
 }

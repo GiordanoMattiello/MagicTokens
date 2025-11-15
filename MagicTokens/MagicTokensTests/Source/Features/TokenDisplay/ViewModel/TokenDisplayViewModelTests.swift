@@ -13,30 +13,38 @@ import CommonKitTestSources
 final class TokenDisplayViewModelTests: XCTestCase {
     var sut: TokenDisplayViewModel!
     var networkManagerMock: NetworkServiceMock!
-    var token: Token!
+    var coordinatorMock: CoordinatorsMock!
     
     override func setUp() {
         super.setUp()
         networkManagerMock = NetworkServiceMock()
-        sut = TokenDisplayViewModel(networkManager: networkManagerMock, token: .stub())
+        coordinatorMock = CoordinatorsMock()
+        sut = TokenDisplayViewModel(networkManager: networkManagerMock,
+                                    token: .stub(),
+                                    coordinator: coordinatorMock)
     }
     
-    func testLoadLargeImageWhenNetworkReturnsValidDataShouldReturnUIImage() async {
+    func testLoadImageWhenNetworkReturnsValidDataShouldConfigureUIImage() async {
         // Given
         let imageData = UIImage(systemName: "photo")?.pngData()
-        networkManagerMock.executeRequestReturnValue = { imageData }
+        let expectation = expectation(description: "Chama network execute")
+        networkManagerMock.executeRequestReturnValue = {
+            expectation.fulfill()
+            return imageData
+        }
         
         // When
-        let result = await sut.loadLargeImage()
+        sut.loadImage()
         
         // Then
         guard let imageData else {
             fatalError()
         }
         
-        let resultPixels = result?.pixelData()
+        await fulfillment(of: [expectation])
         let expectedPixels = UIImage(data: imageData)?.pixelData()
-        XCTAssertEqual(resultPixels, expectedPixels)
+        XCTAssertEqual(sut.screenModel.image?.pixelData(),expectedPixels)
+        XCTAssertFalse(sut.screenModel.isLoading)
         XCTAssertEqual(networkManagerMock.executeRequestCallCount, 1)
         XCTAssertEqual(networkManagerMock.receivedExecuteRequestRequests.count, 1)
         XCTAssertEqual(networkManagerMock.receivedExecuteRequestRequests[safe: 0]?.method, .get)
@@ -44,29 +52,68 @@ final class TokenDisplayViewModelTests: XCTestCase {
         XCTAssertEqual(networkManagerMock.receivedExecuteRequestRequests[safe: 0]?.url, "largeImageURL")
     }
     
-    func testLoadLargeImageWhenNetworkReturnsNilShouldReturnNil() async {
+    @MainActor
+    func testLoadImageWhenNetworkReturnsNilShouldReturnNil() async {
         // Given
-        networkManagerMock.executeRequestReturnValue = nil
+        let expectation = expectation(description: "Mostra alert de erro")
+        coordinatorMock.presentAlertCompletion = {
+            expectation.fulfill()
+        }
+        
+        networkManagerMock.executeRequestReturnValue = { return nil }
         
         // When
-        let result = await sut.loadLargeImage()
+        sut.loadImage()
         
         // Then
-        XCTAssertNil(result)
+        await fulfillment(of: [expectation])
+        XCTAssertFalse(sut.screenModel.isLoading)
+        XCTAssertNil(sut.screenModel.image)
         XCTAssertEqual(networkManagerMock.executeRequestCallCount, 1)
+        XCTAssertEqual(coordinatorMock.presentAlertCallCount, 1)
     }
     
-    func testLoadLargeImageWithErrorWhenNetworkReturnsNilShouldReturnNil() async {
+    func testLoadImageWithErrorWhenNetworkReturnsErrorShouldReturnNil() async {
         // Given
-        networkManagerMock.executeRequestReturnValue = nil
         networkManagerMock.executeRequestError = NetworkError.generic
-            
+        let expectation = expectation(description: "Mostra alert de erro")
+        coordinatorMock.presentAlertCompletion = {
+            expectation.fulfill()
+        }
         
         // When
-        let result = await sut.loadLargeImage()
+        sut.loadImage()
         
         // Then
-        XCTAssertNil(result)
+        await fulfillment(of: [expectation])
+        XCTAssertFalse(sut.screenModel.isLoading)
+        XCTAssertNil(sut.screenModel.image)
         XCTAssertEqual(networkManagerMock.executeRequestCallCount, 1)
+        XCTAssertEqual(coordinatorMock.presentAlertCallCount, 1)
+    }
+    
+    func testErrorTryAgainShouldLoadImage() async {
+        // Given
+        networkManagerMock.executeRequestError = NetworkError.generic
+        let expectation = XCTestExpectation(description: "Mostra alert de erro")
+        coordinatorMock.presentAlertCompletion = {
+            expectation.fulfill()
+        }
+        sut.loadImage()
+        
+        // When
+        await fulfillment(of: [expectation])
+        coordinatorMock.presentAlertCompletion = nil
+        coordinatorMock.receivedAlertErrorModel?.secondaryCompletion?()
+        
+        // Then
+        let expectation2 = XCTestExpectation(description: "Mostra alert de erro novamente")
+        coordinatorMock.presentAlertCompletion = {
+            expectation2.fulfill()
+        }
+        await fulfillment(of: [expectation2])
+        XCTAssertFalse(sut.screenModel.isLoading)
+        XCTAssertNil(sut.screenModel.image)
+        XCTAssertEqual(networkManagerMock.executeRequestCallCount, 2)
     }
 }

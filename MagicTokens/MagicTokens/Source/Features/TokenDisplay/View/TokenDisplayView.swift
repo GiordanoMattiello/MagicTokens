@@ -73,11 +73,7 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
     }
     
     private func calculateCornerRadius() -> CGFloat {
-        let width = bounds.width > 0 ? bounds.width : frame.width
-        guard width > 0 else {
-            return Constants.cardBorderProportion * 100
-        }
-        return width * Constants.cardBorderProportion
+        return  bounds.width  * Constants.cardBorderProportion
     }
     
     // MARK: - Private Methods
