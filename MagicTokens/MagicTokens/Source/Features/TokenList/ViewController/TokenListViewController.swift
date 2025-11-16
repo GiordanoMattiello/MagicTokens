@@ -15,7 +15,7 @@ protocol TokenListViewControllerDelegate: AnyObject {
     func didSelectToken(_ token: Token)
 }
 
-protocol ApplyFilterDelegate {
+protocol ApplyFilterDelegate: AnyObject {
     func fetchTokensWithFilter(filterUrl: String)
 }
 
@@ -85,7 +85,7 @@ final class TokenListViewController: UIViewController {
     }
     
     @objc private func rightButtonTapped(){
-        viewModel.didTapRightButton()
+        viewModel.didTapRightButton(delegate: self)
     }
     
 }

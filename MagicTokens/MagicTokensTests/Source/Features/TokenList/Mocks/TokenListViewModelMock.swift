@@ -50,8 +50,10 @@ final class TokenListViewModelMock: TokenListViewModelProtocol {
 
     // MARK: - didTapRightButton
     private(set) var didTapRightButtonCallCount = 0
-    func didTapRightButton() {
+    private(set) var didTapRightButtonReceivedDelegate: ApplyFilterDelegate?
+    func didTapRightButton(delegate: ApplyFilterDelegate?) {
         didTapRightButtonCallCount += 1
+        didTapRightButtonReceivedDelegate = delegate
     }
 
     

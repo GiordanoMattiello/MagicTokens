@@ -327,12 +327,19 @@ final class TokenListViewModelTests: XCTestCase {
         XCTAssertEqual(coordinatorMock.receivedToken, token)
     }
     
-    func testDidTapRightButtonShouldNotCrash() {
-        // Given
-        // When
-        sut.didTapRightButton()
+    func testDidTapRightButtonWithDelegateShouldCallCoordinatorNavigateToFilterScene() {
+        let delegateMock = ApplyFilterDelegateMock()
         
-        // Then
-        // No crash expected - method should be callable
+        sut.didTapRightButton(delegate: delegateMock)
+        
+        XCTAssertEqual(coordinatorMock.navigateToFilterSceneCallCount, 1)
+        XCTAssertIdentical(coordinatorMock.receivedFilterDelegate as? ApplyFilterDelegateMock, delegateMock)
+    }
+    
+    func testDidTapRightButtonWithoutDelegateShouldCallCoordinatorNavigateToFilterScene() {
+        sut.didTapRightButton(delegate: nil)
+        
+        XCTAssertEqual(coordinatorMock.navigateToFilterSceneCallCount, 1)
+        XCTAssertNil(coordinatorMock.receivedFilterDelegate)
     }
 }

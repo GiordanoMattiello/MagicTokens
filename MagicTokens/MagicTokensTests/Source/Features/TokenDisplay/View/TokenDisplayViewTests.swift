@@ -44,7 +44,7 @@ final class TokenDisplayViewTests: XCTestCase {
         
         // Then
         XCTAssertNil(imageView?.image)
-        XCTAssertEqual(imageView?.accessibilityLabel, "Imagem carregada")
+        XCTAssertEqual(imageView?.accessibilityLabel, "Token name")
     }
     
     func testConfigureWithImageAndNotLoadingShouldSetImageViewImage() {
@@ -59,7 +59,7 @@ final class TokenDisplayViewTests: XCTestCase {
         
         // Then
         XCTAssertNotNil(imageView?.image)
-        XCTAssertEqual(imageView?.accessibilityLabel, "Imagem carregada")
+        XCTAssertEqual(imageView?.accessibilityLabel, "Token name")
     }
     
     func testConfigureWithLoadingTrueShouldShowLoadingView() {

@@ -47,9 +47,7 @@ final class TokenDisplayView: UIView, TokenDisplayViewProtocol {
     func configure(model: TokenDisplayScreenModel) {
         let processedImage = processImage(model.image)
         self.imageView.image = processedImage
-        
-        // TODO: - Make accessibilityLabel from token data like "elf - warrior power: 1/ tougnes: 1"
-        self.imageView.accessibilityLabel = "Imagem carregada"
+        self.imageView.accessibilityLabel = "\(model.token.name)"
         
         if model.isLoading {
             loadingView.show()

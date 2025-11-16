@@ -46,4 +46,17 @@ class UINavigationControllerMock: UINavigationControllerProtocol {
         receivedViewControllerToPresent = viewControllerToPresent
         receivedPresentAnimated = flag
     }
+    
+    private(set) var popViewControllerCallCount = 0
+    private(set) var receivedPopAnimated: Bool?
+    private(set) var poppedViewController: UIViewController?
+    @discardableResult func popViewController(animated: Bool) -> UIViewController? {
+        popViewControllerCallCount += 1
+        receivedPopAnimated = animated
+        let popped = topViewController
+        poppedViewController = popped
+        // Simula o pop removendo o topViewController
+        topViewController = nil
+        return popped
+    }
 }

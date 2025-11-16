@@ -7,7 +7,7 @@
 
 @testable import MagicTokens
 
-final class CoordinatorsMock: TokenDisplayCoordinator, AlertErrorCoordinator {
+final class CoordinatorsMock: TokenDisplayCoordinator, AlertErrorCoordinator, TokenFilterCoordinator {
     private(set) var navigateToTokenDisplaySceneCallCount = 0
     private(set) var receivedToken: Token?
     func navigateToTokenDisplayScene(token: Token) {
@@ -22,5 +22,17 @@ final class CoordinatorsMock: TokenDisplayCoordinator, AlertErrorCoordinator {
         receivedAlertErrorModel = alertModel
         presentAlertCallCount += 1
         presentAlertCompletion?()
+    }
+    
+    private(set) var navigateToFilterSceneCallCount = 0
+    private(set) var receivedFilterDelegate: ApplyFilterDelegate?
+    func navigateToFilterScene(delegate: ApplyFilterDelegate?) {
+        navigateToFilterSceneCallCount += 1
+        receivedFilterDelegate = delegate
+    }
+    
+    private(set) var popFilterSceneCallCount = 0
+    func popFilterScene() {
+        popFilterSceneCallCount += 1
     }
 }

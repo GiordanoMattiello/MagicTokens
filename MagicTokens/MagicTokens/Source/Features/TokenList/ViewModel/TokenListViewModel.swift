@@ -15,17 +15,18 @@ protocol TokenListViewModelProtocol: ObservableObject {
     func fetchTokensWithFilter(url: String) async
     func loadImageFromURL(url: String) async -> UIImage?
     func didSelectToken(_ token: Token)
-    func didTapRightButton()
+    func didTapRightButton(delegate: ApplyFilterDelegate?)
     
     var screenModel: TokenListScreenModel { get }
     var screenModelPublisher: Published<TokenListScreenModel>.Publisher { get }
 }
 
 final class TokenListViewModel: TokenListViewModelProtocol {
+    typealias TokenListViewModelCoordinator = TokenDisplayCoordinator & AlertErrorCoordinator & TokenFilterCoordinator
     private let adapter: TokenListAdapterProtocol
     private let networkManager: NetworkServiceProtocol
     private let imageCacheManager: ImageCacheManagerProtocol
-    private let coordinator: TokenDisplayCoordinator & AlertErrorCoordinator
+    private let coordinator: TokenListViewModelCoordinator
     
     @Published private(set) var screenModel: TokenListScreenModel
     var screenModelPublisher: Published<TokenListScreenModel>.Publisher { $screenModel }
@@ -36,7 +37,7 @@ final class TokenListViewModel: TokenListViewModelProtocol {
     init(adapter: TokenListAdapterProtocol,
          networkManager: NetworkServiceProtocol,
          imageCacheManager: ImageCacheManagerProtocol,
-         coordinator: TokenDisplayCoordinator & AlertErrorCoordinator,
+         coordinator: TokenListViewModelCoordinator,
          screenModel: TokenListScreenModel = TokenListScreenModel()) {
         self.adapter = adapter
         self.networkManager = networkManager
@@ -108,8 +109,8 @@ final class TokenListViewModel: TokenListViewModelProtocol {
         coordinator.navigateToTokenDisplayScene(token: token)
     }
     
-    func didTapRightButton() {
-
+    func didTapRightButton(delegate: ApplyFilterDelegate?) {
+        coordinator.navigateToFilterScene(delegate: delegate)
     }
     
     private func tryAgain() {
