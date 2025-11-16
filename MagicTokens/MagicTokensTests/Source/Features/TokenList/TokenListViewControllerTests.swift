@@ -39,8 +39,7 @@ final class TokenListViewControllerTests: XCTestCase {
         XCTAssertEqual(sut.title, "Magic Tokens")
         XCTAssertIdentical(contentViewMock.delegate as? TokenListViewController, sut)
         XCTAssertEqual(viewModelMock.fetchTokensCallCount, 1)
-        XCTAssertNotNil(viewModelMock.tokensPublisher)
-        XCTAssertNotNil(viewModelMock.showErrorPublisher)
+        XCTAssertNotNil(viewModelMock.screenModelPublisher)
     }
     
     func testViewWillAppearShouldSetupRightBarButton() {
@@ -102,53 +101,54 @@ final class TokenListViewControllerTests: XCTestCase {
         XCTAssertEqual(viewModelMock.didSelectTokenReceivedToken, token)
     }
     
-    func testShowErrorPublisherWhenTrueShouldCallPresentError() {
+    func testPublisherWhenTrueShouldCallPresentError() {
         // Given
         sut.viewDidLoad()
         let expectation = self.expectation(description: "Present error should be called")
-        viewModelMock.presentErrorCompletion = {
+        contentViewMock.configureCompletion = {
             expectation.fulfill()
         }
         
         // When
-        viewModelMock.showError = true
+        viewModelMock.screenModel = .init(tokens: [.stub(),.stub()])
         
         // Then
         waitForExpectations()
-        XCTAssertEqual(viewModelMock.presentErrorCallCount, 1)
     }
     
-    func testShowErrorPublisherWhenFalseShouldNotCallPresentError() {
+    @MainActor
+    func testFetchTokensWithFilterShouldCallViewModelFetchTokensWithFilter() async {
         // Given
-        sut.viewDidLoad()
-        let expectation = expectation(description: "Present error should be called")
-        expectation.isInverted = true
-        viewModelMock.presentErrorCompletion = {
-            expectation.fulfill()
+        let filterUrl = "https://api.scryfall.com/cards/search?q=power%3D5"
+        let fetchTokensWithFilterExpectation = XCTestExpectation(description: "Busca tokens com filtro")
+        viewModelMock.fetchTokensWithFilterCompletion = {
+            fetchTokensWithFilterExpectation.fulfill()
         }
         
         // When
-        viewModelMock.showError = false
+        sut.fetchTokensWithFilter(filterUrl: filterUrl)
         
         // Then
-        wait(for: [expectation],timeout: 0.1)
-        XCTAssertEqual(viewModelMock.presentErrorCallCount, 0)
+        await fulfillment(of: [fetchTokensWithFilterExpectation])
+        XCTAssertEqual(viewModelMock.fetchTokensWithFilterCallCount, 1)
+        XCTAssertEqual(viewModelMock.fetchTokensWithFilterReceivedURL, filterUrl)
     }
     
-    func testTokensPublisherWhenTokenArrayChange() {
+    @MainActor
+    func testFetchTokensWithFilterWithDifferentURLShouldCallViewModelWithCorrectURL() async {
         // Given
-        let tokensMock: [Token] = [.stub(),.stub(),.stub(),.stub()]
-        sut.viewDidLoad()
-        let expectation = expectation(description: "Update Tokens")
-        contentViewMock.updateTokensCompletion = {
-            expectation.fulfill()
+        let filterUrl = "exemple.url"
+        let fetchTokensWithFilterExpectation = XCTestExpectation(description: "Busca tokens com filtro diferente")
+        viewModelMock.fetchTokensWithFilterCompletion = {
+            fetchTokensWithFilterExpectation.fulfill()
         }
         
         // When
-        viewModelMock.tokens = tokensMock
-   
+        sut.fetchTokensWithFilter(filterUrl: filterUrl)
+        
         // Then
-        waitForExpectations()
-        XCTAssertEqual(contentViewMock.updateTokensReceivedTokens, tokensMock)
+        await fulfillment(of: [fetchTokensWithFilterExpectation])
+        XCTAssertEqual(viewModelMock.fetchTokensWithFilterCallCount, 1)
+        XCTAssertEqual(viewModelMock.fetchTokensWithFilterReceivedURL, filterUrl)
     }
 }

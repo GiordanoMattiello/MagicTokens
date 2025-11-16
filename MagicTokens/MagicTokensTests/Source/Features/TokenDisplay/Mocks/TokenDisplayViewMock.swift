@@ -11,11 +11,11 @@ import UIKit
 
 class TokenDisplayViewMock: UIView, TokenDisplayViewProtocol {
     private(set) var configureCallCount = 0
-    private(set) var receivedImage: UIImage?
+    private(set) var receivedScreenModel:TokenDisplayScreenModel?
     var onCompleteConfigure: (()->Void)?
-    func configure(image: UIImage?) {
+    func configure(model: TokenDisplayScreenModel) {
         configureCallCount += 1
-        receivedImage = image
+        receivedScreenModel = model
         onCompleteConfigure?()
     }
 }

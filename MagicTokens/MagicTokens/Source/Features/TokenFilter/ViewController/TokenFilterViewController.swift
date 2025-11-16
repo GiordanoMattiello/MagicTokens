@@ -1,27 +1,27 @@
 //
-//  TokenDisplayViewController.swift
+//  TokenFilterViewController.swift
 //  MagicTokens
 //
-//  Created by Giordano Mattiello on 10/11/25.
+//  Created by Giordano Mattiello on 11/11/25.
 //
 
 import UIKit
-import CommonKit
 import Combine
 
-final class TokenDisplayViewController: UIViewController {
-    private var viewModel: any TokenDisplayViewModelProtocol
-    private let contentView: TokenDisplayViewProtocol
-    private var idleTimer: IdleTimer
+final class TokenFilterViewController: UIViewController {
+    private var viewModel: any TokenFilterViewModelProtocol
+    private let contentView: TokenFilterViewProtocol
     private var cancellables = Set<AnyCancellable>()
     
-    init(contentView: TokenDisplayViewProtocol,
-         viewModel: any TokenDisplayViewModelProtocol,
-         idleTimer: IdleTimer = UIApplication.shared) {
+    init(contentView: TokenFilterViewProtocol,
+         viewModel: any TokenFilterViewModelProtocol) {
         self.contentView = contentView
         self.viewModel = viewModel
-        self.idleTimer = idleTimer
         super.init(nibName: nil, bundle: nil)
+        
+        if let filterView = contentView as? TokenFilterView {
+            filterView.delegate = self
+        }
     }
 
     @available(*, unavailable)
@@ -33,30 +33,15 @@ final class TokenDisplayViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupBindings()
-        viewModel.loadImage()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        idleTimer.isIdleTimerDisabled = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        idleTimer.isIdleTimerDisabled = false
     }
     
     override func loadView() {
         view = contentView
     }
     
-    deinit {
-        idleTimer.isIdleTimerDisabled = false
-    }
-    
     private func setupNavigationBar() {
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
-        title = viewModel.screenModel.token.name
+        title = "Filtros"
     }
     
     private func setupBindings() {
@@ -67,5 +52,22 @@ final class TokenDisplayViewController: UIViewController {
                 self?.contentView.configure(model: model)
             }
             .store(in: &cancellables)
+        
+        contentView.configure(model: viewModel.screenModel)
     }
 }
+
+extension TokenFilterViewController: TokenFilterViewDelegate {
+    func didTapApplyFilter() {
+        viewModel.applyFilter()
+    }
+    
+    func didChangeNameFilter(_ text: String) {
+        viewModel.updateNameFilter(text)
+    }
+    
+    func didToggleColor(_ color: MagicColor, isSelected: Bool) {
+        viewModel.toggleColor(color, isSelected: isSelected)
+    }
+}
+

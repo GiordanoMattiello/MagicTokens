@@ -15,6 +15,10 @@ protocol TokenListViewControllerDelegate: AnyObject {
     func didSelectToken(_ token: Token)
 }
 
+protocol ApplyFilterDelegate: AnyObject {
+    func fetchTokensWithFilter(filterUrl: String)
+}
+
 final class TokenListViewController: UIViewController {
     private let contentView: TokenListViewProtocol
     private var viewModel: any TokenListViewModelProtocol
@@ -39,8 +43,8 @@ final class TokenListViewController: UIViewController {
         super.viewDidLoad()
         title = "Magic Tokens"
         contentView.delegate = self
-        fetchTokens()
         setupBindings()
+        fetchTokens()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,21 +57,12 @@ final class TokenListViewController: UIViewController {
     }
     
     private func setupBindings() {
-        viewModel.tokensPublisher
-            .receive(on: RunLoop.main)
+        viewModel.screenModelPublisher
+            .receive(on: DispatchQueue.main)
             .dropFirst()
-            .sink { [weak self] tokens in
-                self?.contentView.updateTokens(tokens)
-            }
-            .store(in: &cancellables)
-        
-        viewModel.showErrorPublisher
-            .receive(on: RunLoop.main)
-            .dropFirst()
-            .sink { [weak self] showError in
-                if showError {
-                    self?.viewModel.presentError()
-                }
+            .sink { [weak self] screenModel in
+                guard let self else { return }
+                self.contentView.configure(model: screenModel)
             }
             .store(in: &cancellables)
     }
@@ -90,7 +85,7 @@ final class TokenListViewController: UIViewController {
     }
     
     @objc private func rightButtonTapped(){
-        viewModel.didTapRightButton()
+        viewModel.didTapRightButton(delegate: self)
     }
     
 }
@@ -106,5 +101,13 @@ extension TokenListViewController: TokenListViewControllerDelegate {
     
     func didSelectToken(_ token: Token) {
         viewModel.didSelectToken(token)
+    }
+}
+
+extension TokenListViewController: ApplyFilterDelegate {
+    func fetchTokensWithFilter(filterUrl: String) {
+        Task {
+            await viewModel.fetchTokensWithFilter(url: filterUrl)
+        }
     }
 }

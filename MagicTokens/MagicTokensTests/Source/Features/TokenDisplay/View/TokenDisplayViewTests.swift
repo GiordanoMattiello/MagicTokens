@@ -14,39 +14,91 @@ final class TokenDisplayViewTests: XCTestCase {
     override func setUp() {
         super.setUp()
         sut = TokenDisplayView()
+        sut.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
     }
     
     func testInitShouldSetupSubviews() {
-        // Given
-        let imageView = sut.findView(withAccessibilityIdentifier: "imageView") as? UIImageView
-        
         // Then
-        XCTAssertEqual(sut.subviews.count, 1)
+        XCTAssertEqual(sut.subviews.count, 2)
         XCTAssertEqual(sut.backgroundColor, .systemBackground)
+        
+        let imageView = sut.findView(withAccessibilityIdentifier: "tokenImageView") as? UIImageView
+        XCTAssertNotNil(imageView)
         XCTAssertEqual(imageView?.contentMode, .scaleAspectFit)
         XCTAssertEqual(imageView?.backgroundColor, .systemBackground)
+        XCTAssertEqual(imageView?.alpha, 0)
+        
+        let loadingView = sut.subviews.first(where: { $0 is LoadingView }) as? LoadingView
+        XCTAssertNotNil(loadingView)
+        XCTAssertTrue(loadingView?.isHidden ?? false)
     }
     
-    func testConfigureWithNilImageShouldSetImageViewImageToNil() {
+    func testConfigureWithNilImageAndNotLoadingShouldSetImageViewImageToNil() {
         // Given
-        let imageView = sut.findView(withAccessibilityIdentifier: "imageView") as? UIImageView
+        let token = Token.stub()
+        let model = TokenDisplayScreenModel(token: token, image: nil, isLoading: false)
+        let imageView = sut.findView(withAccessibilityIdentifier: "tokenImageView") as? UIImageView
         
         // When
-        sut.configure(image: nil)
+        sut.configure(model: model)
         
         // Then
         XCTAssertNil(imageView?.image)
+        XCTAssertEqual(imageView?.accessibilityLabel, "Token name")
     }
     
-    func testConfigureWithImageShouldSetImageViewImage() {
+    func testConfigureWithImageAndNotLoadingShouldSetImageViewImage() {
         // Given
+        let token = Token.stub()
         let image = UIImage(systemName: "photo")
-        let imageView = sut.findView(withAccessibilityIdentifier: "imageView") as? UIImageView
+        let model = TokenDisplayScreenModel(token: token, image: image, isLoading: false)
+        let imageView = sut.findView(withAccessibilityIdentifier: "tokenImageView") as? UIImageView
         
         // When
-        sut.configure(image: image)
+        sut.configure(model: model)
         
         // Then
         XCTAssertNotNil(imageView?.image)
+        XCTAssertEqual(imageView?.accessibilityLabel, "Token name")
+    }
+    
+    func testConfigureWithLoadingTrueShouldShowLoadingView() {
+        // Given
+        let token = Token.stub()
+        let model = TokenDisplayScreenModel(token: token, image: nil, isLoading: true)
+        let loadingView = sut.subviews.first(where: { $0 is LoadingView }) as? LoadingView
+        
+        // When
+        sut.configure(model: model)
+        
+        // Then
+        XCTAssertFalse(loadingView?.isHidden ?? true)
+    }
+    
+    func testConfigureWithLoadingFalseShouldHideLoadingView() {
+        // Given
+        let token = Token.stub()
+        let model = TokenDisplayScreenModel(token: token, image: nil, isLoading: false)
+        let loadingView = sut.subviews.first(where: { $0 is LoadingView }) as? LoadingView
+        
+        // When
+        sut.configure(model: model)
+        
+        // Then
+        XCTAssertTrue(loadingView?.isHidden ?? false)
+    }
+    
+    func testConfigureWithLoadingTrueShouldSetImageViewAlphaToZero() {
+        // Given
+        let token = Token.stub()
+        let image = UIImage(systemName: "photo")
+        let model = TokenDisplayScreenModel(token: token, image: image, isLoading: true)
+        let imageView = sut.findView(withAccessibilityIdentifier: "tokenImageView") as? UIImageView
+        
+        // When
+        sut.configure(model: model)
+        
+        // Then
+        XCTAssertEqual(imageView?.alpha, 0)
     }
 }

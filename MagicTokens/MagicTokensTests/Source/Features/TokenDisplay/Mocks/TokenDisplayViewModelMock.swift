@@ -9,12 +9,11 @@
 import UIKit
 
 class TokenDisplayViewModelMock: TokenDisplayViewModelProtocol {
-    var token: Token = .stub()
-
     private(set) var loadLargeImageCallCount = 0
-    var loadLargeImageReturnValue: UIImage?
-    func loadLargeImage() async -> UIImage? {
+    func loadImage() {
         loadLargeImageCallCount += 1
-        return loadLargeImageReturnValue
     }
+    
+    @Published var screenModel: TokenDisplayScreenModel = TokenDisplayScreenModel(token: .stub())
+    var screenModelPublisher: Published<MagicTokens.TokenDisplayScreenModel>.Publisher {$screenModel}
 }

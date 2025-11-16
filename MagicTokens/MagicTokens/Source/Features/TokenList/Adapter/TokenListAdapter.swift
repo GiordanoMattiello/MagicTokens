@@ -15,7 +15,10 @@ final class TokenListAdapter: TokenListAdapterProtocol {
         let token = Token(smallImageURL: imagesUris.small,
                           largeImageURL: imagesUris.large,
                           name: scryToken.name,
-                          type: scryToken.typeLine)
+                          type: scryToken.typeLine,
+                          power: scryToken.power,
+                          toughness: scryToken.toughness
+        )
         return token
     }
 }

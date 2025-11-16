@@ -8,8 +8,7 @@
 import UIKit
 
 protocol TokenListViewProtocol where Self: UIView {
-    func updateTokens(_ tokens: [Token])
-    
+    func configure(model: TokenListScreenModel)
     var delegate: TokenListViewControllerDelegate? { get set }
 }
 
@@ -30,6 +29,13 @@ final class TokenListView: UIView, TokenListViewProtocol {
         return collectionView
     }()
     
+    private let loadingView: LoadingView = {
+        let view = LoadingView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemBackground
+        return view
+    }()
+    
     init(dataSource: TokenListDataSourceProtocol = TokenListDataSource()) {
         self.dataSource = dataSource
         super.init(frame: .zero)
@@ -46,9 +52,15 @@ final class TokenListView: UIView, TokenListViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateTokens(_ tokens: [Token]) {
-        dataSource.updateTokens(tokens)
+    func configure(model: TokenListScreenModel) {
+        dataSource.updateTokens(model.tokens)
         reloadView()
+        
+        if model.isLoading {
+            loadingView.show()
+        } else {
+            self.loadingView.hide()
+        }
     }
     
     // MARK: - Private Methods
@@ -61,6 +73,8 @@ final class TokenListView: UIView, TokenListViewProtocol {
     
     private func setupSubViews() {
         addSubview(collectionView)
+        addSubview(loadingView)
+        bringSubviewToFront(loadingView)
     }
     
     private func setupLayout() {
@@ -77,7 +91,12 @@ final class TokenListView: UIView, TokenListViewProtocol {
             collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            
+            loadingView.topAnchor.constraint(equalTo: topAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     

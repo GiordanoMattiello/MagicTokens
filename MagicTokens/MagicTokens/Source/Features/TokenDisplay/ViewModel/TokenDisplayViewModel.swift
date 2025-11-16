@@ -7,29 +7,67 @@
 
 import CommonKit
 import UIKit
+import Combine
 
 protocol TokenDisplayViewModelProtocol {
-    func loadLargeImage() async -> UIImage?
-    var token: Token { get }
+    func loadImage()
+    
+    var screenModel: TokenDisplayScreenModel { get }
+    var screenModelPublisher: Published<TokenDisplayScreenModel>.Publisher { get }
 }
 
 final class TokenDisplayViewModel: TokenDisplayViewModelProtocol {
     private let networkManager: NetworkServiceProtocol
-    let token: Token
+    private let coordinator: AlertErrorCoordinator
+    
+    @Published private(set) var screenModel: TokenDisplayScreenModel
+    var screenModelPublisher: Published<TokenDisplayScreenModel>.Publisher { $screenModel }
     
     init(networkManager: NetworkServiceProtocol,
-         token: Token) {
+         token: Token,
+         coordinator: AlertErrorCoordinator) {
         self.networkManager = networkManager
-        self.token = token
+        self.coordinator = coordinator
+        self.screenModel = TokenDisplayScreenModel(token: token, image: nil, isLoading: false)
     }
     
-    func loadLargeImage() async -> UIImage? {
-        let request = TokenDisplayViewRequest(url: token.largeImageURL)
-        let dataImage: Data? = try? await networkManager.executeRequest(request: request)
-        if let dataImage = dataImage, let image = UIImage(data: dataImage) {
-            return image
+    func loadImage() {
+        screenModel.isLoading = true
+        Task { [weak self] in
+            do {
+                let image = try await self?.loadLargeImage()
+                await MainActor.run { [weak self] in
+                    guard let self else { return }
+                    let token = self.screenModel.token 
+                    self.screenModel = .init(token: token, image:  image,isLoading: false)
+                }
+            } catch {
+                await MainActor.run { [weak self] in
+                    self?.screenModel.isLoading = false
+                    self?.presentError()
+                }
+            }
         }
-        return nil
     }
     
+    private func loadLargeImage() async throws -> UIImage? {
+        let request = TokenDisplayViewRequest(url: screenModel.token.largeImageURL)
+        let dataImage: Data? = try await networkManager.executeRequest(request: request)
+        guard let dataImage, let image = UIImage(data: dataImage) else {
+            throw TokenDisplayError.imageParseError
+        }
+        return image
+    }
+    
+    private func presentError() {
+        let alertModel = AlertErrorModel(
+            message: "Erro ao carregar a imagem do token.",
+            secondaryButtonTitle: "Tentar novamente",
+            primaryCompletion: nil,
+            secondaryCompletion: { [weak self] in
+                    self?.loadImage()
+            }
+        )
+        coordinator.presentAlert(alertModel: alertModel)
+    }
 }

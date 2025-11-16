@@ -39,13 +39,25 @@ final class TokenListViewTests: XCTestCase {
     
     func testUpdateTokensShouldCallDataSourceUpdateTokens() {
         // Given
-        let tokens = [Token]()
+        let model = TokenListScreenModel()
         
         // When
-        sut.updateTokens(tokens)
+        sut.configure(model: model)
         
         // Then
         XCTAssertEqual(dataSourceMock.updateTokensCallCount, 1)
-        XCTAssertEqual(dataSourceMock.updateTokensReceivedTokens, tokens)
+        XCTAssertEqual(dataSourceMock.updateTokensReceivedTokens, [])
+    }
+    
+    func testConfigureWithLoadingFalseShouldHideLoadingView() {
+        // Given
+        let model = TokenListScreenModel(tokens: [], isLoading: false)
+        let loadingView = sut.subviews.first(where: { $0 is LoadingView }) as? LoadingView
+        
+        // When
+        sut.configure(model: model)
+        
+        // Then
+        XCTAssertTrue(loadingView?.isHidden ?? false)
     }
 }

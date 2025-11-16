@@ -12,63 +12,72 @@ import UIKit
 protocol TokenListViewModelProtocol: ObservableObject {
     func fetchTokens(url: String) async
     func fetchNextPageTokens() async
+    func fetchTokensWithFilter(url: String) async
     func loadImageFromURL(url: String) async -> UIImage?
     func didSelectToken(_ token: Token)
-    func didTapRightButton()
-    func presentError()
+    func didTapRightButton(delegate: ApplyFilterDelegate?)
     
-    
-    var tokens: [Token] { get set }
-    var tokensPublisher: Published<[Token]>.Publisher { get }
-    
-    var showError: Bool { get set }
-    var showErrorPublisher: Published<Bool>.Publisher { get }
+    var screenModel: TokenListScreenModel { get }
+    var screenModelPublisher: Published<TokenListScreenModel>.Publisher { get }
 }
 
 final class TokenListViewModel: TokenListViewModelProtocol {
+    typealias TokenListViewModelCoordinator = TokenDisplayCoordinator & AlertErrorCoordinator & TokenFilterCoordinator
     private let adapter: TokenListAdapterProtocol
     private let networkManager: NetworkServiceProtocol
     private let imageCacheManager: ImageCacheManagerProtocol
-    private let coordinator: TokenDisplayCoordinator & AlertErrorCoordinator
+    private let coordinator: TokenListViewModelCoordinator
     
-    @Published var tokens: [Token] = []
-    var tokensPublisher: Published<[Token]>.Publisher { $tokens }
-    
-    @Published var showError: Bool = false
-    var showErrorPublisher: Published<Bool>.Publisher { $showError }
+    @Published private(set) var screenModel: TokenListScreenModel
+    var screenModelPublisher: Published<TokenListScreenModel>.Publisher { $screenModel }
     
     private var nextPageURL: String?
+    private var isLoadingNextPage: Bool = false
     
     init(adapter: TokenListAdapterProtocol,
          networkManager: NetworkServiceProtocol,
          imageCacheManager: ImageCacheManagerProtocol,
-         coordinator: TokenDisplayCoordinator & AlertErrorCoordinator) {
+         coordinator: TokenListViewModelCoordinator,
+         screenModel: TokenListScreenModel = TokenListScreenModel()) {
         self.adapter = adapter
         self.networkManager = networkManager
         self.imageCacheManager = imageCacheManager
         self.coordinator = coordinator
+        self.screenModel = screenModel
     }
     
     func fetchNextPageTokens() async {
-        if let url = nextPageURL {
-            await fetchTokens(url: url)
-        }
+        guard !isLoadingNextPage, let url = nextPageURL else { return }
+        isLoadingNextPage = true
+        await fetchTokens(url: url)
+        isLoadingNextPage = false
     }
     
+    func fetchTokensWithFilter(url: String) async {
+        updateScreenModel(tokens: [], isLoading: true, replaceTokens: true)
+        nextPageURL = nil
+        await fetchTokens(url: url)
+    }
+    
+    
+    @MainActor
     func fetchTokens(url: String) async {
         let request = TokenListRequest(url: url)
-        // Todo Ligar Loading
+        updateScreenModel(isLoading: true)
         do {
             let response: TokenListResponse? = try await networkManager.executeRequest(request: request)
             nextPageURL = response?.nextPage
-            // Todo desligar Loading
-            guard let tokens = response?.tokens else { return }
-            self.tokens += tokens.compactMap { [weak self] scryToken in
+            guard let tokens = response?.tokens else {
+                updateScreenModel(isLoading: false)
+                return
+            }
+            let adaptedTokens = tokens.compactMap { [weak self] scryToken in
                 self?.adapter.tokenAdapt(scryToken)
             }
+            updateScreenModel(tokens: adaptedTokens, isLoading: false)
         } catch {
-            showError = true
-            // Todo desligar Loading
+            updateScreenModel(isLoading: false)
+            presentError()
         }
     }
     
@@ -86,31 +95,40 @@ final class TokenListViewModel: TokenListViewModelProtocol {
         return nil
     }
     
-    func presentError() {
+    private func presentError() {
         let alertModel = AlertErrorModel(message: "Erro ao carregar os tokens.",
             secondaryButtonTitle: "Tentar novamente",
-            primaryCompletion: { [weak self] in
-                self?.showError = false
-            },
+            primaryCompletion: nil,
             secondaryCompletion: { [weak self] in
                 self?.tryAgain()
             })
-        coordinator.presentAlert(alertModel: alertModel)
+        self.coordinator.presentAlert(alertModel: alertModel)
     }
     
     func didSelectToken(_ token: Token) {
         coordinator.navigateToTokenDisplayScene(token: token)
     }
     
-    func didTapRightButton() {
-
+    func didTapRightButton(delegate: ApplyFilterDelegate?) {
+        coordinator.navigateToFilterScene(delegate: delegate)
     }
     
     private func tryAgain() {
-        Task {
-            tokens = []
-            await fetchTokens(url: Strings.tokenListURL)
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            self.updateScreenModel(tokens: [], isLoading: true, replaceTokens: true)
+            await self.fetchTokens(url: Strings.tokenListURL)
         }
-        showError = false
+    }
+    
+    private func updateScreenModel(tokens: [Token]? = nil, isLoading: Bool, replaceTokens: Bool = false) {
+        if let tokens = tokens {
+            if replaceTokens {
+                self.screenModel = TokenListScreenModel(tokens: tokens, isLoading: isLoading)
+            } else {
+                self.screenModel.tokens += tokens
+            }
+        }
+        self.screenModel.isLoading = isLoading
     }
 }
