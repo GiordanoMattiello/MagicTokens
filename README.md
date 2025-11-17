@@ -77,7 +77,6 @@ O projeto segue a arquitetura **MVVM-C (Model-View-ViewModel-Coordinator)**:
 ### Requisitos
 - Xcode 15.0 ou superior
 - iOS 16.0 ou superior
-- Swift 6.1
 
 ### Instalação
 1. Clone o repositório
@@ -127,7 +126,6 @@ O projeto segue a arquitetura **MVVM-C (Model-View-ViewModel-Coordinator)**:
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Swift 6.1**: Linguagem de programação
 - **UIKit**: Framework de interface do usuário
 - **Combine**: Framework reativo para programação assíncrona
 - **URLSession**: Para requisições de rede
