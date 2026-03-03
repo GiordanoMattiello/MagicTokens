@@ -31,7 +31,7 @@ final class MagicColorTests: XCTestCase {
     
     func testDisplayNameForBlueShouldReturnAzul() {
         // Given & When & Then
-        XCTAssertEqual(MagicColor.blue.displayName, "Azul")
+        XCTAssertEqual(MagicColor.blue.displayName, "Azul d")
     }
     
     func testDisplayNameForBlackShouldReturnPreto() {
