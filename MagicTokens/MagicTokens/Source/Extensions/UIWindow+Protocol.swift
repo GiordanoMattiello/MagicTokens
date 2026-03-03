@@ -12,4 +12,4 @@ public protocol UIWindowProtocol {
     var rootViewController: UIViewController? { get set }
 }
 
-extension UIWindow: UIWindowProtocol{}
+extension UIWindow: UIWindowProtocol
