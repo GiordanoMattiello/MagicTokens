@@ -2,51 +2,92 @@ name: iOS CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, pipeline-tests ] 
   pull_request:
     branches: [ main ]
 
 jobs:
+  # Job 1: Verificar ambiente e listar informações
+  info:
+    runs-on: macos-15
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      
+      - name: Ver informações do ambiente
+        run: |
+          echo "Versão do Xcode:"
+          xcodebuild -version
+          echo ""
+          echo "Versão do Swift:"
+          swift --version
+      
+      - name: Listar simuladores disponíveis
+        run: |
+          echo "Simuladores disponíveis:"
+          xcrun simctl list devices available | grep -E "iPhone|iPad"
+      
+      - name: Listar schemes do projeto
+        run: |
+          cd MagicTokens
+          echo "Schemes disponíveis:"
+          xcodebuild -list -project "MagicTokens.xcodeproj"
+  
   build:
     runs-on: macos-15
-    
+    needs: info
     steps:
-    - name: Baixar código
-      uses: actions/checkout@v4
-    
-    - name: Ver informações do ambiente
-      run: |
-        echo "Versão do Xcode:"
-        xcodebuild -version
-        echo ""
-        echo "Versão do Swift:"
-        swift --version
-    
-    - name: Listar simuladores disponíveis
-      run: |
-        echo "Simuladores disponíveis:"
-        xcrun simctl list devices available | grep -E "iPhone|iPad"
-    
-    - name: Listar arquivos do projeto
-      run: |
-        echo "Arquivos no repositório:"
-        ls -la
-        echo ""
-        echo "Procurando arquivo .xcodeproj:"
-        find . -name "*.xcodeproj" -type d
+      - name: Baixar código
+        uses: actions/checkout@v4
       
-    - name: Entrar na pasta e compilar
-      run: |
-        echo "📁 Entrando na pasta MagicTokens..."
-        cd MagicTokens
-        
-        echo "📁 Arquivos na pasta:"
-        ls -la
-        
-        echo "🔨 Compilando app..."
-        xcodebuild clean build \
-          -project "MagicTokens.xcodeproj" \
-          -scheme "MagicTokens" \
-          -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-          -configuration Debug \
-          CODE_SIGNING_ALLOWED=NO
+      - name: Compilar app
+        run: |
+          cd MagicTokens
+          echo "🔨 Compilando app..."
+          xcodebuild clean build \
+            -project "MagicTokens.xcodeproj" \
+            -scheme "MagicTokens" \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO
+  
+  test:
+    runs-on: macos-15
+    needs: build
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      
+      - name: Rodar testes
+        run: |
+          cd MagicTokens
+          echo "🧪 Rodando testes..."
+          xcodebuild test \
+            -project "MagicTokens.xcodeproj" \
+            -scheme "MagicTokens" \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            -configuration Debug \
+            -enableCodeCoverage YES \
+            CODE_SIGNING_ALLOWED=NO
+      
+      - name: Upload resultados dos testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/
+  
+  notify:
+    runs-on: macos-15
+    needs: [build, test]
+    if: always()
+    steps:
+      - name: Verificar status
+        run: |
+          if [ "${{ needs.build.result }}" == "success" ] && [ "${{ needs.test.result }}" == "success" ]; then
+            echo "✅ Pipeline completa com sucesso!"
+          else
+            echo "❌ Pipeline falhou!"
+            echo "Build: ${{ needs.build.result }}"
+            echo "Testes: ${{ needs.test.result }}"
+          fi
