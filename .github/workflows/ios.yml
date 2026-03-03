@@ -1,5 +1,8 @@
 name: iOS CI
 
+env:
+  IOS_SIMULATOR_NAME: "iPhone 16 Pro"
+
 on:
   push:
     branches: [ main, pipeline-tests ] 
@@ -21,10 +24,10 @@ jobs:
           echo "Swift version:"
           swift --version
       
-      - name: List available simulators
+      - name: Check iPhone 16 Pro simulator
         run: |
-          echo "Available simulators:"
-          xcrun simctl list devices available | grep -E "iPhone|iPad"
+          echo "Looking for $IOS_SIMULATOR_NAME simulator:"
+          xcrun simctl list devices available | grep -F "$IOS_SIMULATOR_NAME"
       
       - name: List project schemes
         run: |
@@ -43,12 +46,18 @@ jobs:
         run: |
           cd MagicTokens
           echo "🔨 Building app..."
-          xcodebuild clean build \
+          set -o pipefail
+          if xcodebuild clean build \
             -project "MagicTokens.xcodeproj" \
             -scheme "MagicTokens" \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
             -configuration Debug \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO; then
+            echo "✅ Build succeeded!"
+          else
+            echo "❌ Build failed!"
+            exit 1
+          fi
   
   test:
     runs-on: macos-15
@@ -69,7 +78,7 @@ jobs:
           set -o pipefail && xcodebuild test \
             -project "MagicTokens.xcodeproj" \
             -scheme "MagicTokens" \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
             -configuration Debug \
             -enableCodeCoverage YES \
             CODE_SIGNING_ALLOWED=NO > test-logs/full-log.txt 2>&1
