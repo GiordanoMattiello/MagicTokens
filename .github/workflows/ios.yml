@@ -35,8 +35,15 @@ jobs:
         echo "Procurando arquivo .xcodeproj:"
         find . -name "*.xcodeproj" -type d
       
-    - name: Compilar app
+    - name: Entrar na pasta e compilar
       run: |
+        echo "📁 Entrando na pasta MagicTokens..."
+        cd MagicTokens
+        
+        echo "📁 Arquivos na pasta:"
+        ls -la
+        
+        echo "🔨 Compilando app..."
         xcodebuild clean build \
           -project "MagicTokens.xcodeproj" \
           -scheme "MagicTokens" \
