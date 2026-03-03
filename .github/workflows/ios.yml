@@ -1,0 +1,45 @@
+name: iOS CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-15
+    
+    steps:
+    - name: Baixar código
+      uses: actions/checkout@v4
+    
+    - name: Ver informações do ambiente
+      run: |
+        echo "Versão do Xcode:"
+        xcodebuild -version
+        echo ""
+        echo "Versão do Swift:"
+        swift --version
+    
+    - name: Listar simuladores disponíveis
+      run: |
+        echo "Simuladores disponíveis:"
+        xcrun simctl list devices available | grep -E "iPhone|iPad"
+    
+    - name: Listar arquivos do projeto
+      run: |
+        echo "Arquivos no repositório:"
+        ls -la
+        echo ""
+        echo "Procurando arquivo .xcodeproj:"
+        find . -name "*.xcodeproj" -type d
+      
+    - name: Compilar app
+      run: |
+        xcodebuild clean build \
+          -project "MagicTokens.xcodeproj" \
+          -scheme "MagicTokens" \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+          -configuration Debug \
+          CODE_SIGNING_ALLOWED=NO
