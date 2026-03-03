@@ -7,43 +7,42 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job 1: Verificar ambiente e listar informações
   info:
     runs-on: macos-15
     steps:
-      - name: Baixar código
+      - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Ver informações do ambiente
+      - name: Check environment info
         run: |
-          echo "Versão do Xcode:"
+          echo "Xcode version:"
           xcodebuild -version
           echo ""
-          echo "Versão do Swift:"
+          echo "Swift version:"
           swift --version
       
-      - name: Listar simuladores disponíveis
+      - name: List available simulators
         run: |
-          echo "Simuladores disponíveis:"
+          echo "Available simulators:"
           xcrun simctl list devices available | grep -E "iPhone|iPad"
       
-      - name: Listar schemes do projeto
+      - name: List project schemes
         run: |
           cd MagicTokens
-          echo "Schemes disponíveis:"
+          echo "Available schemes:"
           xcodebuild -list -project "MagicTokens.xcodeproj"
   
   build:
     runs-on: macos-15
     needs: info
     steps:
-      - name: Baixar código
+      - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Compilar app
+      - name: Build app
         run: |
           cd MagicTokens
-          echo "🔨 Compilando app..."
+          echo "🔨 Building app..."
           xcodebuild clean build \
             -project "MagicTokens.xcodeproj" \
             -scheme "MagicTokens" \
@@ -55,39 +54,94 @@ jobs:
     runs-on: macos-15
     needs: build
     steps:
-      - name: Baixar código
+      - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Rodar testes
+      - name: Run tests with detailed logs
+        id: tests
+        continue-on-error: true
         run: |
           cd MagicTokens
-          echo "🧪 Rodando testes..."
-          xcodebuild test \
+          echo "🧪 Running tests..."
+          
+          mkdir -p test-logs
+          
+          set -o pipefail && xcodebuild test \
             -project "MagicTokens.xcodeproj" \
             -scheme "MagicTokens" \
             -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
             -configuration Debug \
             -enableCodeCoverage YES \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO > test-logs/full-log.txt 2>&1
+          
+          echo "🔴 FAILED TESTS:" > test-logs/failures.txt
+          grep -E "✗|FAILED|error:.*test" test-logs/full-log.txt >> test-logs/failures.txt || echo "No tests failed ✓" >> test-logs/failures.txt
+          
+          echo "" >> test-logs/failures.txt
+          echo "📊 SUMMARY:" >> test-logs/failures.txt
+          grep -E "Executed|Test Suite 'All tests' (failed|passed)" test-logs/full-log.txt >> test-logs/failures.txt || true
+          
+          echo ""
+          echo "══════════════════════════════════════════════"
+          echo "     🔴 FAILED TESTS (summary)               "
+          echo "══════════════════════════════════════════════"
+          cat test-logs/failures.txt
+          echo "══════════════════════════════════════════════"
+          
+          if grep -q "failed" test-logs/full-log.txt; then
+            echo "status=failure" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "status=success" >> $GITHUB_OUTPUT
+          fi
       
-      - name: Upload resultados dos testes
+      - name: Upload complete logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: complete-test-logs
+          path: MagicTokens/test-logs/
+      
+      - name: Upload Xcode test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcode-test-results
           path: ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/
+  
+  test-summary:
+    runs-on: macos-15
+    needs: test
+    if: always() && needs.test.result == 'failure'
+    steps:
+      - name: Test failure warning
+        run: |
+          echo "::error title=Tests Failed::Check the 'complete-test-logs' artifact for full details"
+          echo ""
+          echo "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌"
+          echo "❌      TESTS FAILED! Check logs above          ❌"
+          echo "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌"
   
   notify:
     runs-on: macos-15
     needs: [build, test]
     if: always()
     steps:
-      - name: Verificar status
+      - name: Check status
         run: |
           if [ "${{ needs.build.result }}" == "success" ] && [ "${{ needs.test.result }}" == "success" ]; then
-            echo "✅ Pipeline completa com sucesso!"
+            echo "✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅"
+            echo "✅   Pipeline completed SUCCESSFULLY!   ✅"
+            echo "✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅"
           else
-            echo "❌ Pipeline falhou!"
-            echo "Build: ${{ needs.build.result }}"
-            echo "Testes: ${{ needs.test.result }}"
+            echo "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌"
+            echo "❌   Pipeline FAILED!                    ❌"
+            echo "❌   Build: ${{ needs.build.result }}"
+            echo "❌   Tests: ${{ needs.test.result }}"
+            echo "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌"
+            
+            if [ "${{ needs.test.result }}" == "failure" ]; then
+              echo ""
+              echo "📝 TIP: Download the 'complete-test-logs' artifact to see all failed tests"
+            fi
           fi
