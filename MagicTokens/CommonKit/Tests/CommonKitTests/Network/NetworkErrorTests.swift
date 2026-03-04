@@ -141,7 +141,7 @@ final class NetworkErrorTests: XCTestCase {
             .generic
         ]
         for i in 0..<cases1.count {
-            XCTAssertEqual(cases1[i],cases2[i])
+            XCTAssertEqual(cases1[i], cases2[i])
         }
     }
     
@@ -165,7 +165,7 @@ final class NetworkErrorTests: XCTestCase {
             .invalidURL
         ]
         for i in 0..<cases1.count {
-            XCTAssertNotEqual(cases1[i],cases2[i])
+            XCTAssertNotEqual(cases1[i], cases2[i])
         }
     }
     

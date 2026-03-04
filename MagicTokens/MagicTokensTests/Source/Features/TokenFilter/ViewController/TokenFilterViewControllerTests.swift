@@ -139,4 +139,3 @@ final class TokenFilterViewControllerTests: XCTestCase {
         XCTAssertEqual(viewModelMock.toggleColorReceivedColor, .white)
     }
 }
-

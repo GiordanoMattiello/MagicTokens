@@ -37,4 +37,3 @@ enum MagicColor: String, CaseIterable {
         }
     }
 }
-

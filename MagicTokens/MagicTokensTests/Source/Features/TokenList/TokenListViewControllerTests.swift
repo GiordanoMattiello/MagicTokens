@@ -110,7 +110,7 @@ final class TokenListViewControllerTests: XCTestCase {
         }
         
         // When
-        viewModelMock.screenModel = .init(tokens: [.stub(),.stub()])
+        viewModelMock.screenModel = .init(tokens: [.stub(), .stub()])
         
         // Then
         waitForExpectations()

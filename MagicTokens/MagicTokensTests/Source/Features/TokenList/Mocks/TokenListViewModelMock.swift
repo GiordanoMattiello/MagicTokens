@@ -17,7 +17,7 @@ final class TokenListViewModelMock: TokenListViewModelProtocol {
     // MARK: - fetchTokens
     private(set) var fetchTokensCallCount = 0
     private(set) var fetchTokensReceivedURL: String?
-    var fetchTokensCompletion: (()->Void)?
+    var fetchTokensCompletion: (() -> Void)?
     func fetchTokens(url: String) async {
         fetchTokensCallCount += 1
         fetchTokensReceivedURL = url
@@ -33,7 +33,7 @@ final class TokenListViewModelMock: TokenListViewModelProtocol {
     // MARK: - loadImageFromURL
     private(set) var loadImageFromURLCallCount = 0
     private(set) var loadImageFromURLReceivedURL: String?
-    var loadImageFromURLReturnValue: (()->UIImage?)?
+    var loadImageFromURLReturnValue: (() -> UIImage?)?
     func loadImageFromURL(url: String) async -> UIImage? {
         loadImageFromURLCallCount += 1
         loadImageFromURLReceivedURL = url
@@ -56,10 +56,9 @@ final class TokenListViewModelMock: TokenListViewModelProtocol {
         didTapRightButtonReceivedDelegate = delegate
     }
 
-    
     private(set) var fetchTokensWithFilterCallCount = 0
     private(set) var fetchTokensWithFilterReceivedURL: String?
-    var fetchTokensWithFilterCompletion: (()->Void)?
+    var fetchTokensWithFilterCompletion: (() -> Void)?
     func fetchTokensWithFilter(url: String) async {
         fetchTokensWithFilterCallCount += 1
         fetchTokensWithFilterReceivedURL = url

@@ -59,7 +59,6 @@ final class TokenListViewModel: TokenListViewModelProtocol {
         await fetchTokens(url: url)
     }
     
-    
     @MainActor
     func fetchTokens(url: String) async {
         let request = TokenListRequest(url: url)

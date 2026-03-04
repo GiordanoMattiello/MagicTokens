@@ -35,4 +35,3 @@ final class TokenFilterViewDelegateMock: TokenFilterViewDelegate {
         onDidToggleColor?(color, isSelected)
     }
 }
-

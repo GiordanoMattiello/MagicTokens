@@ -14,7 +14,7 @@ let package = Package(
         .library(
             name: "CommonKitTestSources",
             targets: ["CommonKitTestSources"]
-        ),
+        )
     ],
     targets: [
         .target(
@@ -29,6 +29,6 @@ let package = Package(
             name: "CommonKitTests",
             dependencies: ["CommonKit"],
             path: "Tests"
-        ),
+        )
     ]
 )

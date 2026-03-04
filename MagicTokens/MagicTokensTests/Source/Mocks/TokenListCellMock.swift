@@ -20,7 +20,7 @@ final class TokenListCellMock: UICollectionViewCell, TokenListCellProtocol {
 
     private(set) var configureCallCount: Int = 0
     private(set) var receivedImage: UIImage?
-    var configureCompletion: (()->Void)?
+    var configureCompletion: (() -> Void)?
     func configure(with image: UIImage?) {
         configureCallCount += 1
         receivedImage = image
