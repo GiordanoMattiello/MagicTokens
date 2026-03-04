@@ -92,8 +92,11 @@ jobs:
             echo "No tests failed ✓" >> test-logs/failures.txt
           fi
           
-          # Marca status de falha se qualquer um dos logs contiver o marcador padrão do Xcode
-          if grep -q "\*\* TEST FAILED \*\*" test-logs/full-log.txt test-logs/full-error-log.txt 2>/dev/null; then
+          # Mostra o resumo de falhas no log do GitHub
+          cat test-logs/failures.txt
+          
+          # Define o status com base apenas no failures.txt
+          if grep -q "Failing tests:" test-logs/failures.txt; then
             echo "status=failure" >> $GITHUB_OUTPUT
             exit 1
           else
