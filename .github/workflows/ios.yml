@@ -68,14 +68,13 @@ jobs:
       
       - name: Run tests with detailed logs
         id: tests
+        continue-on-error: true
         run: |
           cd MagicTokens
           echo "🧪 Running tests..."
           
           mkdir -p test-logs
           
-          # Permite que o script continue mesmo se o xcodebuild retornar erro,
-          # para que possamos gerar/resumir os logs manualmente.
           set -o pipefail
           set +e
           xcodebuild test \
@@ -93,13 +92,15 @@ jobs:
             grep -A10 "Failing tests:" test-logs/full-log.txt >> test-logs/failures.txt
           elif [ -f test-logs/full-error-log.txt ] && grep -q "Failing tests:" test-logs/full-error-log.txt; then
             grep -A10 "Failing tests:" test-logs/full-error-log.txt >> test-logs/failures.txt
+          elif [ "$XCODE_EXIT_CODE" -ne 0 ]; then
+            echo "Tests failed (no 'Failing tests:' marker found, check full logs)." >> test-logs/failures.txt
           else
             echo "No tests failed ✓" >> test-logs/failures.txt
           fi
           
           cat test-logs/failures.txt
           
-          if [ "$XCODE_EXIT_CODE" -ne 0 ] && grep -q "Failing tests:" test-logs/failures.txt; then
+          if [ "$XCODE_EXIT_CODE" -ne 0 ]; then
             echo "tests_failed=true" >> $GITHUB_ENV
           else
             echo "tests_failed=false" >> $GITHUB_ENV
