@@ -69,7 +69,6 @@ final class TokenDisplayViewControllerTests: XCTestCase {
         XCTAssertFalse(idleTimerMock.isIdleTimerDisabled)
     }
     
-    
     func testLoadViewShouldSetContentViewAsView() {
         // When
         sut.loadView()

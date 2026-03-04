@@ -78,5 +78,3 @@ final class TokenFilterScreenModelTests: XCTestCase {
         XCTAssertTrue(model.selectedColors.contains(.black))
     }
 }
-
-

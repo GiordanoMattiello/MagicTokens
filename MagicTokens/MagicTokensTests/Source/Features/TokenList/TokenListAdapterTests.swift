@@ -21,7 +21,7 @@ final class TokenListAdapterTests: XCTestCase {
         let expectedToken = Token(smallImageURL: "https://example.com/small.png",
                                   largeImageURL: "https://example.com/large.png",
                                   name: "Token Name",
-                                  type:  "Token Creature — Spirit",
+                                  type: "Token Creature — Spirit",
                                   power: "1",
                                   toughness: "1")
 
@@ -29,7 +29,7 @@ final class TokenListAdapterTests: XCTestCase {
         let token = sut.tokenAdapt(.stub())
         
         // Then
-        XCTAssertEqual(token,expectedToken)
+        XCTAssertEqual(token, expectedToken)
     }
     
     func testAdaptTokenWitoutImageUris() {

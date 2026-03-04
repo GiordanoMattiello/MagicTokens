@@ -11,7 +11,7 @@ import UIKit
 class TokenFilterViewMock: UIView, TokenFilterViewProtocol {
     private(set) var configureCallCount = 0
     private(set) var receivedScreenModel: TokenFilterScreenModel?
-    var onCompleteConfigure: (()->Void)?
+    var onCompleteConfigure: (() -> Void)?
     func configure(model: TokenFilterScreenModel) {
         configureCallCount += 1
         receivedScreenModel = model
@@ -19,7 +19,7 @@ class TokenFilterViewMock: UIView, TokenFilterViewProtocol {
     }
     
     private(set) var setApplyFilterActionCallCount = 0
-    var applyFilterAction: (()->Void)?
+    var applyFilterAction: (() -> Void)?
     func setApplyFilterAction(_ action: @escaping () -> Void) {
         setApplyFilterActionCallCount += 1
         applyFilterAction = action
@@ -46,5 +46,3 @@ class TokenFilterViewMock: UIView, TokenFilterViewProtocol {
         colorToggleAction = action
     }
 }
-
-

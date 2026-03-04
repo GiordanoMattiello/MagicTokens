@@ -24,8 +24,12 @@ final class TokenListDataSource: NSObject, TokenListDataSourceProtocol {
         tokens.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TokenListCell.reuseIdentifier, for: indexPath) as? TokenListCellProtocol else {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TokenListCell.reuseIdentifier,
+            for: indexPath
+        ) as? TokenListCellProtocol else {
             return UICollectionViewCell()
         }
         self.loadImage(with: tokens[indexPath.row].smallImageURL) { image in
@@ -53,7 +57,7 @@ final class TokenListDataSource: NSObject, TokenListDataSourceProtocol {
         return CGSize(width: width, height: width / Constants.cardProportion )
     }
     
-    private func loadImage(with imageUrl: String, completion: @escaping (UIImage)->Void ) {
+    private func loadImage(with imageUrl: String, completion: @escaping (UIImage) -> Void ) {
         Task {
             let image: UIImage? = try? await delegate?.loadImageFromURL(url: imageUrl)
             guard let image = image else {return}

@@ -84,7 +84,7 @@ final class TokenListViewController: UIViewController {
         navigationItem.rightBarButtonItem = rightButton
     }
     
-    @objc private func rightButtonTapped(){
+    @objc private func rightButtonTapped() {
         viewModel.didTapRightButton(delegate: self)
     }
     

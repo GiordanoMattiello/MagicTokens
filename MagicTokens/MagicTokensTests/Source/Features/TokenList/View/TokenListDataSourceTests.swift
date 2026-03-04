@@ -53,7 +53,7 @@ final class TokenListDataSourceTests: XCTestCase {
     @MainActor
     func testCollectionViewCellForItemAtDequeuesTokenListCell() async {
         // Given
-        sut.updateTokens([.stub(),.stub()])
+        sut.updateTokens([.stub(), .stub()])
         
         // Cell Mock
         let cellMock = TokenListCellMock()
@@ -71,7 +71,7 @@ final class TokenListDataSourceTests: XCTestCase {
         }
 
         // When
-        let cell = sut.collectionView(collectionViewMock, cellForItemAt:  IndexPath(item: 0, section: 0))
+        let cell = sut.collectionView(collectionViewMock, cellForItemAt: IndexPath(item: 0, section: 0))
 
         // Then
         await fulfillment(of: [loadImageExpectation, cellConfiguredExpectation])
@@ -83,7 +83,7 @@ final class TokenListDataSourceTests: XCTestCase {
             XCTFail("Célula não é TokenListCellMock")
             return
         }
-        XCTAssertEqual(cell.configureCallCount,1)
+        XCTAssertEqual(cell.configureCallCount, 1)
         XCTAssertEqual(cell.receivedImage, UIImage(systemName: "photo"))
     }
 

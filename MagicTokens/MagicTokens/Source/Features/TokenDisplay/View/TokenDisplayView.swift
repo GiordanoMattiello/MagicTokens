@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol TokenDisplayViewProtocol where Self: UIView  {
+protocol TokenDisplayViewProtocol where Self: UIView {
     func configure(model: TokenDisplayScreenModel)
 }
 

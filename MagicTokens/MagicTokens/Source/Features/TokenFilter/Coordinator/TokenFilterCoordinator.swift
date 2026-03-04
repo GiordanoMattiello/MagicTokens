@@ -30,4 +30,3 @@ extension AppCoordinator: TokenFilterCoordinator {
         return TokenFilterViewController(contentView: view, viewModel: viewModel)
     }
 }
-

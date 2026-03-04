@@ -384,4 +384,3 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         }
     }
 }
-

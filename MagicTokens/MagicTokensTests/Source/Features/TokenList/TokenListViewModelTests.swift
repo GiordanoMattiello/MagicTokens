@@ -34,8 +34,8 @@ final class TokenListViewModelTests: XCTestCase {
     func testFetchTokensWithValidURLShouldUpdateTokensAndNextPageURL() async {
         // Given
         let url = "test-url"
-        let expectedTokens = [Token.stub(),Token.stub()]
-        let response = TokenListResponse.stub(tokens: [TokenScryFall.stub(),TokenScryFall.stub()])
+        let expectedTokens = [Token.stub(), Token.stub()]
+        let response = TokenListResponse.stub(tokens: [TokenScryFall.stub(), TokenScryFall.stub()])
         networkManagerMock.executeRequestReturnValue = { response }
         adapterMock.tokenAdaptReturnValue = Token.stub()
         
@@ -187,7 +187,6 @@ final class TokenListViewModelTests: XCTestCase {
         // Given
         networkManagerMock.executeRequestError = NetworkError.generic
         await sut.fetchTokens(url: "url")
-        
         
         // When
         coordinatorMock.receivedAlertErrorModel?.secondaryCompletion?()

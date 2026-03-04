@@ -11,7 +11,7 @@ import UIKit
 class TokenListViewControllerDelegateMock: TokenListViewControllerDelegate {
     private(set) var loadImageFromURLCallCount = 0
     private(set) var loadImageFromURLReceivedURL: String?
-    var loadImageFromURLReturnValue: (()->UIImage?)?
+    var loadImageFromURLReturnValue: (() -> UIImage?)?
     var loadImageFromURLError: Error?
     func loadImageFromURL(url: String) async throws -> UIImage? {
         loadImageFromURLCallCount += 1
@@ -23,7 +23,7 @@ class TokenListViewControllerDelegateMock: TokenListViewControllerDelegate {
     }
     
     private(set) var fetchNextPageTokensCallCount = 0
-    var fetchNextPageTokensCompletion: (()->Void?)?
+    var fetchNextPageTokensCompletion: (() -> Void?)?
     func fetchNextPageTokens() async {
         fetchNextPageTokensCallCount += 1
         fetchNextPageTokensCompletion?()

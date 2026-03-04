@@ -17,7 +17,7 @@ final class CoordinatorsMock: TokenDisplayCoordinator, AlertErrorCoordinator, To
     
     private(set) var presentAlertCallCount = 0
     private(set) var receivedAlertErrorModel: AlertErrorModel?
-    var presentAlertCompletion: (()->Void)?
+    var presentAlertCompletion: (() -> Void)?
     func presentAlert(alertModel: AlertErrorModel) {
         receivedAlertErrorModel = alertModel
         presentAlertCallCount += 1

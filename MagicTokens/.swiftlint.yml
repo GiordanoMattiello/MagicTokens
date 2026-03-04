@@ -1,0 +1,12 @@
+disabled_rules:
+  - trailing_whitespace
+  - vertical_parameter_alignment
+
+# Regra customizada: avisa apenas quando há 2+ espaços no final de linhas com código.
+# Linhas só com espaços (ex.: linha em branco com indentação) são ignoradas.
+custom_rules:
+  trailing_whitespace_2plus:
+    name: "Trailing Whitespace (2+)"
+    regex: '.*\S[ \t]{2,}$'
+    message: "Linhas não devem ter 2 ou mais espaços no final."
+    severity: warning

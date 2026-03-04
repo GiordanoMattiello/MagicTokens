@@ -263,4 +263,3 @@ final class TokenFilterViewTests: XCTestCase {
         XCTAssertEqual(nameTextField?.returnKeyType, .done)
     }
 }
-

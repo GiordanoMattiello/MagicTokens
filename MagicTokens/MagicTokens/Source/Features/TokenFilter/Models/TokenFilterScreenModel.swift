@@ -18,4 +18,3 @@ struct TokenFilterScreenModel {
         self.selectedColors = selectedColors
     }
 }
-

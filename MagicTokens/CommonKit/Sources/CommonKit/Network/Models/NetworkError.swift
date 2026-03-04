@@ -30,7 +30,7 @@ public enum NetworkError: Error, Equatable {
             
         }
         
-        guard (200..<300 ~= httpResponse.statusCode) else {
+        guard 200..<300 ~= httpResponse.statusCode else {
             self = .statusError(httpResponse.statusCode)
             return
         }

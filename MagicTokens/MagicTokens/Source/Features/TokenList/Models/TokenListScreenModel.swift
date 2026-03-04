@@ -16,4 +16,3 @@ struct TokenListScreenModel: Equatable {
         self.isLoading = isLoading
     }
 }
-

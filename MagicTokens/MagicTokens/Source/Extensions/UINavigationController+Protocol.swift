@@ -14,4 +14,3 @@ public protocol UINavigationControllerProtocol {
     func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?)
     @discardableResult func popViewController(animated: Bool) -> UIViewController?
 }
-

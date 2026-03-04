@@ -39,7 +39,7 @@ final class TokenDisplayViewModel: TokenDisplayViewModelProtocol {
                 await MainActor.run { [weak self] in
                     guard let self else { return }
                     let token = self.screenModel.token 
-                    self.screenModel = .init(token: token, image:  image,isLoading: false)
+                    self.screenModel = .init(token: token, image: image, isLoading: false)
                 }
             } catch {
                 await MainActor.run { [weak self] in
