@@ -68,7 +68,6 @@ jobs:
       
       - name: Run tests with detailed logs
         id: tests
-        continue-on-error: true
         run: |
           cd MagicTokens
           echo "🧪 Running tests..."
@@ -101,10 +100,9 @@ jobs:
           cat test-logs/failures.txt
           
           if [ "$XCODE_EXIT_CODE" -ne 0 ] && grep -q "Failing tests:" test-logs/failures.txt; then
-            echo "status=failure" >> $GITHUB_OUTPUT
-            exit 1
+            echo "tests_failed=true" >> $GITHUB_ENV
           else
-            echo "status=success" >> $GITHUB_OUTPUT
+            echo "tests_failed=false" >> $GITHUB_ENV
           fi
       
       - name: Upload complete logs
@@ -120,6 +118,13 @@ jobs:
         with:
           name: xcode-test-results
           path: ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/
+
+      - name: Set test job result
+        if: always()
+        run: |
+          if [ "${{ env.tests_failed }}" = "true" ]; then
+            exit 1
+          fi
   
   test-summary:
     runs-on: macos-15
