@@ -1,52 +1,127 @@
 name: iOS CI
 
+env:
+  IOS_SIMULATOR_NAME: "iPhone 16 Pro"
+
 on:
   push:
-    branches: [ main ]
+    branches: [ main, pipeline-tests ] 
   pull_request:
     branches: [ main ]
 
 jobs:
+  info:
+    runs-on: macos-15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check environment info
+        run: |
+          echo "Xcode version:"
+          xcodebuild -version
+          echo ""
+          echo "Swift version:"
+          swift --version
+      
+      - name: Check iPhone 16 Pro simulator
+        run: |
+          echo "Looking for $IOS_SIMULATOR_NAME simulator:"
+          xcrun simctl list devices available | grep -F "$IOS_SIMULATOR_NAME"
+      
+      - name: List project schemes
+        run: |
+          cd MagicTokens
+          echo "Available schemes:"
+          xcodebuild -list -project "MagicTokens.xcodeproj"
+  
   build:
     runs-on: macos-15
-    
+    needs: info
     steps:
-    - name: Baixar código
-      uses: actions/checkout@v4
-    
-    - name: Ver informações do ambiente
-      run: |
-        echo "Versão do Xcode:"
-        xcodebuild -version
-        echo ""
-        echo "Versão do Swift:"
-        swift --version
-    
-    - name: Listar simuladores disponíveis
-      run: |
-        echo "Simuladores disponíveis:"
-        xcrun simctl list devices available | grep -E "iPhone|iPad"
-    
-    - name: Listar arquivos do projeto
-      run: |
-        echo "Arquivos no repositório:"
-        ls -la
-        echo ""
-        echo "Procurando arquivo .xcodeproj:"
-        find . -name "*.xcodeproj" -type d
+      - name: Checkout code
+        uses: actions/checkout@v4
       
-    - name: Entrar na pasta e compilar
-      run: |
-        echo "📁 Entrando na pasta MagicTokens..."
-        cd MagicTokens
-        
-        echo "📁 Arquivos na pasta:"
-        ls -la
-        
-        echo "🔨 Compilando app..."
-        xcodebuild clean build \
-          -project "MagicTokens.xcodeproj" \
-          -scheme "MagicTokens" \
-          -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-          -configuration Debug \
-          CODE_SIGNING_ALLOWED=NO
+      - name: Build app
+        run: |
+          cd MagicTokens
+          echo "🔨 Building app..."
+          set -o pipefail
+          if xcodebuild clean build \
+            -project "MagicTokens.xcodeproj" \
+            -scheme "MagicTokens" \
+            -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO; then
+            echo "✅ Build succeeded!"
+          else
+            echo "❌ Build failed!"
+            exit 1
+          fi
+  
+  test:
+    runs-on: macos-15
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run tests with detailed logs
+        id: tests
+        run: |
+          cd MagicTokens
+          echo "🧪 Running tests..."
+          
+          mkdir -p test-logs
+          
+          set -o pipefail
+          set +e
+          xcodebuild test \
+            -project "MagicTokens.xcodeproj" \
+            -scheme "MagicTokens" \
+            -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
+            -configuration Debug \
+            -enableCodeCoverage YES \
+            CODE_SIGNING_ALLOWED=NO > test-logs/full-log.txt 2> test-logs/full-error-log.txt
+          XCODE_EXIT_CODE=$?
+          set -e
+          
+          echo "🔴 FAILED TESTS:" > test-logs/failures.txt
+          if grep -q "Failing tests:" test-logs/full-log.txt; then
+            grep -A10 "Failing tests:" test-logs/full-log.txt >> test-logs/failures.txt
+          elif [ -f test-logs/full-error-log.txt ] && grep -q "Failing tests:" test-logs/full-error-log.txt; then
+            grep -A10 "Failing tests:" test-logs/full-error-log.txt >> test-logs/failures.txt
+          elif [ "$XCODE_EXIT_CODE" -ne 0 ]; then
+            echo "Tests failed (no 'Failing tests:' marker found, check full logs)." >> test-logs/failures.txt
+          else
+            echo "No tests failed ✓" >> test-logs/failures.txt
+          fi
+          
+          cat test-logs/failures.txt
+          
+          if [ "$XCODE_EXIT_CODE" -ne 0 ]; then
+            echo "tests_failed=true" >> $GITHUB_ENV
+          else
+            echo "tests_failed=false" >> $GITHUB_ENV
+          fi
+      
+      - name: Upload complete logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: complete-test-logs
+          path: MagicTokens/test-logs/
+      
+      - name: Upload Xcode test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcode-test-results
+          path: ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/
+
+      - name: Set test job result
+        if: always()
+        run: |
+          if [ "${{ env.tests_failed }}" = "true" ]; then
+            exit 1
+          fi
