@@ -75,13 +75,19 @@ jobs:
           
           mkdir -p test-logs
           
-          set -o pipefail && xcodebuild test \
+          # Permite que o script continue mesmo se o xcodebuild retornar erro,
+          # para que possamos gerar/resumir os logs manualmente.
+          set -o pipefail
+          set +e
+          xcodebuild test \
             -project "MagicTokens.xcodeproj" \
             -scheme "MagicTokens" \
             -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
             -configuration Debug \
             -enableCodeCoverage YES \
             CODE_SIGNING_ALLOWED=NO > test-logs/full-log.txt 2> test-logs/full-error-log.txt
+          XCODE_EXIT_CODE=$?
+          set -e
           
           echo "🔴 FAILED TESTS:" > test-logs/failures.txt
           if grep -q "Failing tests:" test-logs/full-log.txt; then
@@ -92,11 +98,9 @@ jobs:
             echo "No tests failed ✓" >> test-logs/failures.txt
           fi
           
-          # Mostra o resumo de falhas no log do GitHub
           cat test-logs/failures.txt
           
-          # Define o status com base apenas no failures.txt
-          if grep -q "Failing tests:" test-logs/failures.txt; then
+          if [ "$XCODE_EXIT_CODE" -ne 0 ] && grep -q "Failing tests:" test-logs/failures.txt; then
             echo "status=failure" >> $GITHUB_OUTPUT
             exit 1
           else
