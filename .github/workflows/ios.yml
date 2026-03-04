@@ -81,23 +81,19 @@ jobs:
             -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
             -configuration Debug \
             -enableCodeCoverage YES \
-            CODE_SIGNING_ALLOWED=NO > test-logs/full-log.txt 2>&1
+            CODE_SIGNING_ALLOWED=NO > test-logs/full-log.txt 2> test-logs/full-error-log.txt
           
           echo "🔴 FAILED TESTS:" > test-logs/failures.txt
-          grep -E "✗|FAILED|error:.*test" test-logs/full-log.txt >> test-logs/failures.txt || echo "No tests failed ✓" >> test-logs/failures.txt
+          if grep -q "Failing tests:" test-logs/full-log.txt; then
+            grep -A10 "Failing tests:" test-logs/full-log.txt >> test-logs/failures.txt
+          elif [ -f test-logs/full-error-log.txt ] && grep -q "Failing tests:" test-logs/full-error-log.txt; then
+            grep -A10 "Failing tests:" test-logs/full-error-log.txt >> test-logs/failures.txt
+          else
+            echo "No tests failed ✓" >> test-logs/failures.txt
+          fi
           
-          echo "" >> test-logs/failures.txt
-          echo "📊 SUMMARY:" >> test-logs/failures.txt
-          grep -E "Executed|Test Suite 'All tests' (failed|passed)" test-logs/full-log.txt >> test-logs/failures.txt || true
-          
-          echo ""
-          echo "══════════════════════════════════════════════"
-          echo "     🔴 FAILED TESTS (summary)               "
-          echo "══════════════════════════════════════════════"
-          cat test-logs/failures.txt
-          echo "══════════════════════════════════════════════"
-          
-          if grep -q "failed" test-logs/full-log.txt; then
+          # Marca status de falha se qualquer um dos logs contiver o marcador padrão do Xcode
+          if grep -q "\*\* TEST FAILED \*\*" test-logs/full-log.txt test-logs/full-error-log.txt 2>/dev/null; then
             echo "status=failure" >> $GITHUB_OUTPUT
             exit 1
           else
