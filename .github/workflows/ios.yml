@@ -9,7 +9,10 @@ jobs:
     steps:
     - name: Baixar código
       uses: actions/checkout@v4
-    
+
+    - name: Instalar SwiftLint
+      run: brew install swiftlint
+
     - name: Ver informações do ambiente
       run: |
         echo "Versão do Xcode:"
@@ -39,8 +42,12 @@ jobs:
         echo "📁 Arquivos na pasta:"
         ls -la
         
+        echo "🔍 Rodando SwiftLint..."
+        swiftlint --strict
+        
         echo "🔨 Compilando app..."
         xcodebuild clean build \
+          -skipPackagePluginValidation \
           -project "MagicTokens.xcodeproj" \
           -scheme "MagicTokens" \
           -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
