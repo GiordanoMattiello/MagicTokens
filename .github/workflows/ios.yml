@@ -88,28 +88,25 @@ jobs:
             -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
             -configuration Debug \
             -enableCodeCoverage YES \
-            CODE_SIGNING_ALLOWED=NO > test-logs/full-log.txt 2> test-logs/full-error-log.txt
+            CODE_SIGNING_ALLOWED=NO > test-logs/full-log.txt 2>&1
           XCODE_EXIT_CODE=$?
+          cat test-logs/full-log.txt
           set -e
           
           echo "🔴 FAILED TESTS:" > test-logs/failures.txt
           if grep -q "Failing tests:" test-logs/full-log.txt; then
             grep -A10 "Failing tests:" test-logs/full-log.txt >> test-logs/failures.txt
-          elif [ -f test-logs/full-error-log.txt ] && grep -q "Failing tests:" test-logs/full-error-log.txt; then
-            grep -A10 "Failing tests:" test-logs/full-error-log.txt >> test-logs/failures.txt
+            echo "tests_failed=true" >> $GITHUB_ENV
           elif [ "$XCODE_EXIT_CODE" -ne 0 ]; then
-            echo "Tests failed (no 'Failing tests:' marker found, check full logs)." >> test-logs/failures.txt
+            echo "xcodebuild exited with code $XCODE_EXIT_CODE. Last 100 lines of output:" >> test-logs/failures.txt
+            tail -100 test-logs/full-log.txt >> test-logs/failures.txt
+            echo "tests_failed=true" >> $GITHUB_ENV
           else
             echo "No tests failed ✓" >> test-logs/failures.txt
+            echo "tests_failed=false" >> $GITHUB_ENV
           fi
           
           cat test-logs/failures.txt
-          
-          if [ "$XCODE_EXIT_CODE" -ne 0 ]; then
-            echo "tests_failed=true" >> $GITHUB_ENV
-          else
-            echo "tests_failed=false" >> $GITHUB_ENV
-          fi
       
       - name: Upload complete logs
         if: always()
