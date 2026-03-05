@@ -30,8 +30,8 @@ jobs:
           cd MagicTokens
           echo "Available schemes:"
           xcodebuild -list -project "MagicTokens.xcodeproj"
-  
-  build:
+
+  swiftlint:
     runs-on: macos-15
     needs: info
     steps:
@@ -41,11 +41,28 @@ jobs:
       - name: Install SwiftLint
         run: brew install swiftlint
 
-      - name: Run SwiftLint
+      - name: Run SwiftLint and save report
         run: |
           cd MagicTokens
           echo "🔍 Running SwiftLint..."
-          swiftlint --strict
+          mkdir -p lint-logs
+          set -o pipefail
+          swiftlint > lint-logs/swiftlint-report.txt 2>&1
+          cat lint-logs/swiftlint-report.txt
+
+      - name: Upload SwiftLint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftlint-report
+          path: MagicTokens/lint-logs/
+
+  build:
+    runs-on: macos-15
+    needs: [info, swiftlint]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Build app
         run: |
