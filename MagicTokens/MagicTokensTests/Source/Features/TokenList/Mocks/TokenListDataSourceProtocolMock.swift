@@ -8,6 +8,12 @@
 @testable import MagicTokens
 import UIKit
 
+struct SizeForItemArgs {
+    let collectionView: UICollectionView
+    let layout: UICollectionViewLayout
+    let indexPath: IndexPath
+}
+
 final class TokenListDataSourceProtocolMock: NSObject, TokenListDataSourceProtocol {
 
     // MARK: - Delegate
@@ -35,20 +41,29 @@ final class TokenListDataSourceProtocolMock: NSObject, TokenListDataSourceProtoc
     private(set) var cellForItemCallCount = 0
     private(set) var cellForItemReceivedArgs: (collectionView: UICollectionView, indexPath: IndexPath)?
     var cellForItemReturnValue: UICollectionViewCell = UICollectionViewCell()
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         cellForItemCallCount += 1
         cellForItemReceivedArgs = (collectionView, indexPath)
         return cellForItemReturnValue
     }
 
     private(set) var sizeForItemCallCount = 0
-    private(set) var sizeForItemReceivedArgs: (collectionView: UICollectionView, layout: UICollectionViewLayout, indexPath: IndexPath)?
+    private(set) var sizeForItemReceivedArgs: SizeForItemArgs?
     var sizeForItemReturnValue: CGSize = .zero
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         sizeForItemCallCount += 1
-        sizeForItemReceivedArgs = (collectionView, collectionViewLayout, indexPath)
+        sizeForItemReceivedArgs = SizeForItemArgs(
+            collectionView: collectionView,
+            layout: collectionViewLayout,
+            indexPath: indexPath
+        )
         return sizeForItemReturnValue
     }
 }

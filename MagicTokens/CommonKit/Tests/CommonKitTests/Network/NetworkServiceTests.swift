@@ -29,7 +29,7 @@ final class NetworkServiceTests: XCTestCase {
     func testExecuteRequestWithJSONTransformerShouldUseJSONTransformer() async {
         // Given
         let request = NetworkRequestMock()
-        let expectedData = "test".data(using: .utf8)!
+        let expectedData = Data("test".utf8)
         let expectedResult = "test"
         
         executorMock.returnValue = expectedData

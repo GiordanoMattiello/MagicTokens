@@ -12,7 +12,7 @@ final class TokenListDataSourceTests: XCTestCase {
     var sut: TokenListDataSource!
     var delegateMock: TokenListViewControllerDelegateMock!
     var collectionViewMock: UICollectionViewMock!
-    
+
     override func setUp() {
         super.setUp()
         delegateMock = TokenListViewControllerDelegateMock()
@@ -21,25 +21,25 @@ final class TokenListDataSourceTests: XCTestCase {
         sut.delegate = delegateMock
         collectionViewMock.delegate = sut
     }
-     
+
     func testCollectionViewNumberOfItemsInSectionReturnsTokenCount() {
         // Given
         let testTokens: [Token] = [.stub(), .stub(), .stub()]
         sut.updateTokens(testTokens)
-        
+
         // When
         let count = sut.collectionView(collectionViewMock, numberOfItemsInSection: 0)
-        
+
         // Then
         XCTAssertEqual(count, 3)
     }
-    
+
     func testCollectionViewCellForItemAtDequeuesUICollectionViewCell() {
         // Given
         let testTokens: [Token] = [.stub()]
         sut.updateTokens(testTokens)
         let indexPath = IndexPath(item: 0, section: 0)
-        
+
         // When
         let cell = sut.collectionView(collectionViewMock, cellForItemAt: indexPath)
 
@@ -54,7 +54,7 @@ final class TokenListDataSourceTests: XCTestCase {
     func testCollectionViewCellForItemAtDequeuesTokenListCell() async {
         // Given
         sut.updateTokens([.stub(), .stub()])
-        
+
         // Cell Mock
         let cellMock = TokenListCellMock()
         let cellConfiguredExpectation = XCTestExpectation(description: "cell configure called")
@@ -62,7 +62,7 @@ final class TokenListDataSourceTests: XCTestCase {
             cellConfiguredExpectation.fulfill()
         }
         collectionViewMock.dequeueReusableCellReturnValue = cellMock
-        
+
         // imageLoad mock
         let loadImageExpectation = XCTestExpectation(description: "A imagem deve ser carregada e configurada")
         delegateMock.loadImageFromURLReturnValue = {
@@ -75,7 +75,7 @@ final class TokenListDataSourceTests: XCTestCase {
 
         // Then
         await fulfillment(of: [loadImageExpectation, cellConfiguredExpectation])
-        
+
         XCTAssertEqual(collectionViewMock.dequeueReusableCellCallCount, 1)
         XCTAssertEqual(collectionViewMock.receivedReuseIdentifier, "TokenListCell")
         XCTAssertEqual(collectionViewMock.receivedIndexPath, IndexPath(item: 0, section: 0))
@@ -98,7 +98,7 @@ final class TokenListDataSourceTests: XCTestCase {
         delegateMock.fetchNextPageTokensCompletion = {
             fetchNextPageTokensExpectation.fulfill()
         }
-        
+
         // When
         _ = sut.collectionView(collectionViewMock, cellForItemAt: indexPath)
 
@@ -106,12 +106,12 @@ final class TokenListDataSourceTests: XCTestCase {
         await fulfillment(of: [fetchNextPageTokensExpectation], timeout: 1.0)
         XCTAssertEqual(delegateMock.fetchNextPageTokensCallCount, 1)
     }
-//    
+//
     func testCollectionViewDidSelectItemAtCallsDelegate() {
         // Given
         sut.updateTokens([Token.stub()])
         let indexPath = IndexPath(item: 0, section: 0)
-        
+
         // When
         sut.collectionView(collectionViewMock, didSelectItemAt: indexPath)
 
@@ -119,13 +119,17 @@ final class TokenListDataSourceTests: XCTestCase {
         XCTAssertEqual(delegateMock.didSelectTokenCallCount, 1)
         XCTAssertEqual(delegateMock.didSelectTokenReceivedToken, .stub())
     }
-    
+
     func testCollectionViewSizeForItemAtReturnsCorrectSize() {
         // Given
         let indexPath = IndexPath(item: 0, section: 0)
-        
+
         // When
-        let size = sut.collectionView(collectionViewMock, layout: UICollectionViewFlowLayout(), sizeForItemAt: indexPath)
+        let size = sut.collectionView(
+            collectionViewMock,
+            layout: UICollectionViewFlowLayout(),
+            sizeForItemAt: indexPath
+        )
 
         // Then
         XCTAssertEqual(size.width, 146)

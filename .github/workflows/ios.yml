@@ -39,9 +39,6 @@ jobs:
         echo "📁 Entrando na pasta MagicTokens..."
         cd MagicTokens
         
-        echo "📁 Arquivos na pasta:"
-        ls -la
-        
         echo "🔍 Rodando SwiftLint..."
         swiftlint --strict
         

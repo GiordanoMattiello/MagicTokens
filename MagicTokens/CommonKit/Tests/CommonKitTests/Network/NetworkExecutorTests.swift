@@ -20,7 +20,7 @@ final class NetworkExecutorTests: XCTestCase {
     
     func testExecuteWithValidRequestShouldReturnData() async {
         // Given
-        let expectedData = "test data".data(using: .utf8)
+        let expectedData = Data("test data".utf8)
         let request = NetworkRequestMock()
         let url = URL(string: "https://example.com")!
         guard let response = HTTPURLResponse(
@@ -31,7 +31,7 @@ final class NetworkExecutorTests: XCTestCase {
         ) else {
             fatalError()
         }
-        urlSessionMock.dataForReturnValue = (expectedData ?? Data(), response)
+        urlSessionMock.dataForReturnValue = (expectedData, response)
         
         // When
         let result = try? await sut.execute(request: request)

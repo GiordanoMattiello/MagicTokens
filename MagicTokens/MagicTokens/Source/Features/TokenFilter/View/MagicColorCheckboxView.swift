@@ -78,7 +78,7 @@ final class MagicColorCheckboxView: UIView, MagicColorCheckboxViewProtocol {
         colorDot.backgroundColor = color.uiColor
         titleLabel.text = "\(color.displayName) (\(color.rawValue))"
         
-        button.accessibilityIdentifier = "colorCheckbox\(color.rawValue)"
+        button.accessibilityIdentifier = "colorCheckbox\(color.accessibilityIdentifier)"
         button.isAccessibilityElement = true
         button.accessibilityLabel = "Filtrar por cor \(color.displayName)"
         

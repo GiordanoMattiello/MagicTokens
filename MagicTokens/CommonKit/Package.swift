@@ -16,19 +16,26 @@ let package = Package(
             targets: ["CommonKitTestSources"]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/realm/SwiftLint.git", from: "0.63.2")
+    ],
     targets: [
         .target(
-            name: "CommonKit"
+            name: "CommonKit",
+            dependencies: [],
+            plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")]
         ),
         .target(
             name: "CommonKitTestSources",
             dependencies: ["CommonKit"],
-            path: "TestSources"
+            path: "TestSources",
+            plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")]
         ),
         .testTarget(
             name: "CommonKitTests",
             dependencies: ["CommonKit"],
-            path: "Tests"
+            path: "Tests",
+            plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")]
         )
     ]
 )

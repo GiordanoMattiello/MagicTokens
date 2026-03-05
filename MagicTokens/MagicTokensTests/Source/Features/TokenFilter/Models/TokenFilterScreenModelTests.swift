@@ -27,7 +27,11 @@ final class TokenFilterScreenModelTests: XCTestCase {
         let selectedColors: Set<MagicColor> = [.white, .blue]
         
         // When
-        let model = TokenFilterScreenModel(isButtonEnabled: false, nameFilterText: "elf", selectedColors: selectedColors)
+        let model = TokenFilterScreenModel(
+            isButtonEnabled: false,
+            nameFilterText: "elf",
+            selectedColors: selectedColors
+        )
         
         // Then
         XCTAssertFalse(model.isButtonEnabled)
@@ -69,7 +73,11 @@ final class TokenFilterScreenModelTests: XCTestCase {
         let selectedColors: Set<MagicColor> = [.black]
         
         // When
-        let model = TokenFilterScreenModel(isButtonEnabled: false, nameFilterText: "warrior", selectedColors: selectedColors)
+        let model = TokenFilterScreenModel(
+            isButtonEnabled: false,
+            nameFilterText: "warrior",
+            selectedColors: selectedColors
+        )
         
         // Then
         XCTAssertFalse(model.isButtonEnabled)

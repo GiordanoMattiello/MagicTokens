@@ -71,11 +71,18 @@ final class UIColorInvertedTests: XCTestCase {
         let invertedTwice = invertedOnce?.inverted()
         
         // Then
-        var originalRed: CGFloat = 0.0, originalGreen: CGFloat = 0.0, originalBlue: CGFloat = 0.0, originalAlpha: CGFloat = 0.0
-        var twiceRed: CGFloat = 0.0, twiceGreen: CGFloat = 0.0, twiceBlue: CGFloat = 0.0, twiceAlpha: CGFloat = 0.0
-        
-        XCTAssertTrue(originalColor.getRed(&originalRed, green: &originalGreen, blue: &originalBlue, alpha: &originalAlpha))
-        XCTAssertEqual(invertedTwice?.getRed(&twiceRed, green: &twiceGreen, blue: &twiceBlue, alpha: &twiceAlpha), true)
+        var originalRed: CGFloat = 0.0, originalGreen: CGFloat = 0.0, originalBlue: CGFloat = 0.0
+        var originalAlpha: CGFloat = 0.0
+        var twiceRed: CGFloat = 0.0, twiceGreen: CGFloat = 0.0, twiceBlue: CGFloat = 0.0
+        var twiceAlpha: CGFloat = 0.0
+
+        XCTAssertTrue(originalColor.getRed(
+            &originalRed, green: &originalGreen, blue: &originalBlue, alpha: &originalAlpha
+        ))
+        XCTAssertEqual(
+            invertedTwice?.getRed(&twiceRed, green: &twiceGreen, blue: &twiceBlue, alpha: &twiceAlpha),
+            true
+        )
         
         XCTAssertEqual(originalRed, twiceRed, accuracy: 0.001)
         XCTAssertEqual(originalGreen, twiceGreen, accuracy: 0.001)
