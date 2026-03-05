@@ -83,6 +83,7 @@ jobs:
           set -o pipefail
           set +e
           xcodebuild test \
+            -skipPackagePluginValidation \
             -project "MagicTokens.xcodeproj" \
             -scheme "MagicTokens" \
             -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
