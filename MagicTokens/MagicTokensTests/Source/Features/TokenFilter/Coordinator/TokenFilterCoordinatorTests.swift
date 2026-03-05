@@ -70,4 +70,3 @@ final class TokenFilterCoordinatorTests: XCTestCase {
         XCTAssertTrue(viewController is TokenFilterViewController)
     }
 }
-

@@ -173,4 +173,3 @@ final class TokenFilterView: UIView, TokenFilterViewProtocol, UITextFieldDelegat
         return true
     }
 }
-

@@ -66,7 +66,8 @@ final class MagicColorCheckboxView: UIView, MagicColorCheckboxViewProtocol {
     
     func configure(isSelected: Bool) {
         self.isSelected = isSelected
-        checkboxImageView.image = isSelected ? UIImage(systemName: "checkmark.square.fill") : UIImage(systemName: "square")
+        let imageName = isSelected ? "checkmark.square.fill" : "square"
+        checkboxImageView.image = UIImage(systemName: imageName)
     }
     
     func setToggleAction(_ action: @escaping () -> Void) {
@@ -77,7 +78,7 @@ final class MagicColorCheckboxView: UIView, MagicColorCheckboxViewProtocol {
         colorDot.backgroundColor = color.uiColor
         titleLabel.text = "\(color.displayName) (\(color.rawValue))"
         
-        button.accessibilityIdentifier = "colorCheckbox_\(color.rawValue)"
+        button.accessibilityIdentifier = "colorCheckbox\(color.accessibilityIdentifier)"
         button.isAccessibilityElement = true
         button.accessibilityLabel = "Filtrar por cor \(color.displayName)"
         
@@ -111,4 +112,3 @@ final class MagicColorCheckboxView: UIView, MagicColorCheckboxViewProtocol {
         ])
     }
 }
-

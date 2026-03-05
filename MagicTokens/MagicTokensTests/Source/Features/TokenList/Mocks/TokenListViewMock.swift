@@ -15,7 +15,7 @@ final class TokenListViewMock: UIView, TokenListViewProtocol {
     // MARK: - updateTokens
     private(set) var configureCallCount = 0
     private(set) var configureReceivedModel: TokenListScreenModel?
-    var configureCompletion: (()->Void)?
+    var configureCompletion: (() -> Void)?
     func configure(model: TokenListScreenModel) {
         configureCallCount += 1
         configureReceivedModel = model

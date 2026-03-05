@@ -131,7 +131,7 @@ final class TokenFilterViewControllerTests: XCTestCase {
         realSut.viewDidLoad()
         
         // When
-        let whiteCheckbox = realView.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let whiteCheckbox = realView.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         whiteCheckbox?.sendActions(for: .touchUpInside)
         
         // Then
@@ -139,4 +139,3 @@ final class TokenFilterViewControllerTests: XCTestCase {
         XCTAssertEqual(viewModelMock.toggleColorReceivedColor, .white)
     }
 }
-

@@ -398,4 +398,3 @@ final class TokenFilterViewModelTests: XCTestCase {
         XCTAssertEqual(sut.screenModel.nameFilterText, "elf\nwarrior")
     }
 }
-

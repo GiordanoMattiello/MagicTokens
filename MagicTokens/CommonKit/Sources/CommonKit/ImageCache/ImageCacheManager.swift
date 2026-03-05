@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 public protocol ImageCacheManagerProtocol {
-    func cacheObject(data: UIImage,from key: String)
+    func cacheObject(data: UIImage, from key: String)
     func getCache(from key: String) -> UIImage?
 }
 

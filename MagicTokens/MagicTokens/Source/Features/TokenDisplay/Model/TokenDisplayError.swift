@@ -8,4 +8,3 @@
 enum TokenDisplayError: Error {
     case imageParseError
 }
-

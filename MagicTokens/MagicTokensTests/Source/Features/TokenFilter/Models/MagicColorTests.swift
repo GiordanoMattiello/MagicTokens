@@ -132,5 +132,3 @@ final class MagicColorTests: XCTestCase {
         XCTAssertEqual(color, .systemGray)
     }
 }
-
-

@@ -34,5 +34,3 @@ class TokenFilterViewModelMock: TokenFilterViewModelProtocol {
     @Published var screenModel: TokenFilterScreenModel = TokenFilterScreenModel()
     var screenModelPublisher: Published<TokenFilterScreenModel>.Publisher { $screenModel }
 }
-
-

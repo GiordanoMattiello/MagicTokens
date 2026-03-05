@@ -78,4 +78,3 @@ final class TokenFilterViewModel: TokenFilterViewModelProtocol {
         coordinator.popFilterScene()
     }
 }
-

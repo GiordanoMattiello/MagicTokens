@@ -1,0 +1,10 @@
+disabled_rules:
+  - trailing_whitespace
+  - vertical_parameter_alignment
+
+custom_rules:
+  trailing_whitespace_2plus:
+    name: "Trailing Whitespace (2+)"
+    regex: '.*\S[ \t]{2,}$'
+    message: "Linhas não devem ter 2 ou mais espaços no final."
+    severity: warning

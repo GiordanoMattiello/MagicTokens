@@ -40,7 +40,7 @@ final class TokenListCellTests: XCTestCase {
         
         // Then
         let imageView = sut.findView(withAccessibilityIdentifier: "imageView") as? UIImageView
-        XCTAssertEqual(imageView?.image,placeHolderImage)
+        XCTAssertEqual(imageView?.image, placeHolderImage)
         
     }
     
@@ -54,7 +54,7 @@ final class TokenListCellTests: XCTestCase {
         
         // Then
         let imageView = sut.findView(withAccessibilityIdentifier: "imageView") as? UIImageView
-        XCTAssertEqual(imageView?.image?.pixelData(),resultImage?.pixelData())
+        XCTAssertEqual(imageView?.image?.pixelData(), resultImage?.pixelData())
     }
     
     func testConfigureWithNilImageSetsImageView() {

@@ -43,7 +43,7 @@ final class TokenDisplayViewModelTests: XCTestCase {
         
         await fulfillment(of: [expectation])
         let expectedPixels = UIImage(data: imageData)?.pixelData()
-        XCTAssertEqual(sut.screenModel.image?.pixelData(),expectedPixels)
+        XCTAssertEqual(sut.screenModel.image?.pixelData(), expectedPixels)
         XCTAssertFalse(sut.screenModel.isLoading)
         XCTAssertEqual(networkManagerMock.executeRequestCallCount, 1)
         XCTAssertEqual(networkManagerMock.receivedExecuteRequestRequests.count, 1)

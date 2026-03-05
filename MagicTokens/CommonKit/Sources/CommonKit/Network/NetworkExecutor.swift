@@ -14,7 +14,6 @@ public protocol NetworkExecutorProtocol {
 public final class NetworkExecutor: NetworkExecutorProtocol {
     private let session: URLSessionProtocol
 
-    
     public init(session: URLSessionProtocol = URLSession.shared) {
         self.session = session
     }
@@ -40,7 +39,7 @@ public final class NetworkExecutor: NetworkExecutorProtocol {
         
     }
     
-    private func makeURLRequest(_ url: String,_ method: String) -> URLRequest? {
+    private func makeURLRequest(_ url: String, _ method: String) -> URLRequest? {
         guard let url = URL(string: url) else {
             return nil
         }

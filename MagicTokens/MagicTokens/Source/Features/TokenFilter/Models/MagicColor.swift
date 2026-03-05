@@ -26,6 +26,17 @@ enum MagicColor: String, CaseIterable {
         }
     }
     
+    var accessibilityIdentifier: String {
+        switch self {
+        case .white: return "White"
+        case .blue: return "Blue"
+        case .black: return "Black"
+        case .red: return "Red"
+        case .green: return "Green"
+        case .colorless: return "Colorless"
+        }
+    }
+    
     var uiColor: UIColor {
         switch self {
         case .white: return UIColor(white: 0.95, alpha: 1.0)
@@ -37,4 +48,3 @@ enum MagicColor: String, CaseIterable {
         }
     }
 }
-

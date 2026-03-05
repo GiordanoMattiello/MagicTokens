@@ -12,7 +12,7 @@ protocol AlertErrorCoordinator {
 }
 
 extension AppCoordinator: AlertErrorCoordinator {
-    func presentAlert(alertModel: AlertErrorModel){
+    func presentAlert(alertModel: AlertErrorModel) {
         let alert = UIAlertController(
             title: alertModel.title,
             message: alertModel.message,

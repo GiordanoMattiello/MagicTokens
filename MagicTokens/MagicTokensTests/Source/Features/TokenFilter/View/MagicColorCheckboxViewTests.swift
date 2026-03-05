@@ -20,7 +20,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         
         // Then
         XCTAssertFalse(sut.isSelected)
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         XCTAssertNotNil(button)
         XCTAssertEqual(button?.accessibilityLabel, "Filtrar por cor Branco")
     }
@@ -35,7 +35,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         
         // Then
         XCTAssertFalse(sut.isSelected)
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_U") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxBlue") as? UIButton
         XCTAssertNotNil(button)
         XCTAssertEqual(button?.accessibilityLabel, "Filtrar por cor Azul")
     }
@@ -50,7 +50,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         
         // Then
         XCTAssertFalse(sut.isSelected)
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_B") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxBlack") as? UIButton
         XCTAssertNotNil(button)
         XCTAssertEqual(button?.accessibilityLabel, "Filtrar por cor Preto")
     }
@@ -65,7 +65,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         
         // Then
         XCTAssertFalse(sut.isSelected)
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_R") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxRed") as? UIButton
         XCTAssertNotNil(button)
         XCTAssertEqual(button?.accessibilityLabel, "Filtrar por cor Vermelho")
     }
@@ -80,7 +80,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         
         // Then
         XCTAssertFalse(sut.isSelected)
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_G") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxGreen") as? UIButton
         XCTAssertNotNil(button)
         XCTAssertEqual(button?.accessibilityLabel, "Filtrar por cor Verde")
     }
@@ -95,7 +95,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         
         // Then
         XCTAssertFalse(sut.isSelected)
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_C") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxColorless") as? UIButton
         XCTAssertNotNil(button)
         XCTAssertEqual(button?.accessibilityLabel, "Filtrar por cor Incolor")
     }
@@ -138,7 +138,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         button?.sendActions(for: .touchUpInside)
         
         // Then
@@ -155,10 +155,14 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
+        guard let button = button else {
+            XCTFail("Expected to find colorCheckboxWhite button")
+            return
+        }
         XCTAssertNotNil(button)
         XCTAssertEqual(sut.subviews.count, 1)
-        XCTAssertTrue(sut.subviews.contains(button!))
+        XCTAssertTrue(sut.subviews.contains(button))
     }
     
     func testInitShouldSetCorrectTitleLabel() {
@@ -170,7 +174,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         let titleLabel = button?.subviews.first(where: { $0 is UILabel }) as? UILabel
         XCTAssertNotNil(titleLabel)
         XCTAssertEqual(titleLabel?.text, "Branco (W)")
@@ -185,12 +189,14 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
-        let colorDot = button?.subviews.first(where: { $0.backgroundColor != nil && $0.layer.cornerRadius == 10 }) as? UIView
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
+        let colorDot = button?.subviews.first(where: {
+            $0.backgroundColor != nil && $0.layer.cornerRadius == 10
+        }) as? UIView
         XCTAssertNotNil(colorDot)
         XCTAssertEqual(colorDot?.backgroundColor, color.uiColor)
     }
-    
+
     func testInitShouldSetCorrectColorDotForBlue() {
         // Given
         let color = MagicColor.blue
@@ -200,8 +206,10 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_U") as? UIButton
-        let colorDot = button?.subviews.first(where: { $0.backgroundColor != nil && $0.layer.cornerRadius == 10 }) as? UIView
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxBlue") as? UIButton
+        let colorDot = button?.subviews.first(where: {
+            $0.backgroundColor != nil && $0.layer.cornerRadius == 10
+        }) as? UIView
         XCTAssertNotNil(colorDot)
         XCTAssertEqual(colorDot?.backgroundColor, color.uiColor)
     }
@@ -210,7 +218,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         // Given
         let sut = MagicColorCheckboxView(color: .white)
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         let checkboxImageView = button?.subviews.first(where: { $0 is UIImageView }) as? UIImageView
         let initialImage = checkboxImageView?.image
         
@@ -228,7 +236,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         let sut = MagicColorCheckboxView(color: .white)
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         sut.configure(isSelected: true)
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         let checkboxImageView = button?.subviews.first(where: { $0 is UIImageView }) as? UIImageView
         let selectedImage = checkboxImageView?.image
         
@@ -250,7 +258,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         XCTAssertNotNil(button)
         let heightConstraint = button?.constraints.first(where: { $0.firstAttribute == .height && $0.constant == 44 })
         XCTAssertNotNil(heightConstraint)
@@ -265,7 +273,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         XCTAssertTrue(button?.isAccessibilityElement ?? false)
     }
     
@@ -283,7 +291,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         button?.sendActions(for: .touchUpInside)
         button?.sendActions(for: .touchUpInside)
         
@@ -301,7 +309,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         let checkboxImageView = button?.subviews.first(where: { $0 is UIImageView }) as? UIImageView
         XCTAssertNotNil(checkboxImageView)
         XCTAssertEqual(checkboxImageView?.tintColor, .systemBlue)
@@ -319,8 +327,10 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
-        let colorDot = button?.subviews.first(where: { $0.backgroundColor != nil && $0.layer.cornerRadius == 10 }) as? UIView
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
+        let colorDot = button?.subviews.first(where: {
+            $0.backgroundColor != nil && $0.layer.cornerRadius == 10
+        }) as? UIView
         XCTAssertNotNil(colorDot)
         XCTAssertEqual(colorDot?.layer.cornerRadius, 10)
         XCTAssertEqual(colorDot?.layer.borderWidth, 1)
@@ -336,7 +346,7 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
         
         // Then
-        let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let button = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         let titleLabel = button?.subviews.first(where: { $0 is UILabel }) as? UILabel
         XCTAssertNotNil(titleLabel)
         XCTAssertEqual(titleLabel?.font, .systemFont(ofSize: 16))
@@ -367,9 +377,14 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         for color in MagicColor.allCases {
             let sut = MagicColorCheckboxView(color: color)
             sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
-            let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_\(color.rawValue)") as? UIButton
+            let identifier = "colorCheckbox\(color.accessibilityIdentifier)"
+            let button = sut.findView(withAccessibilityIdentifier: identifier) as? UIButton
             let titleLabel = button?.subviews.first(where: { $0 is UILabel }) as? UILabel
-            XCTAssertEqual(titleLabel?.text, "\(color.displayName) (\(color.rawValue))", "Title should match for color \(color.rawValue)")
+            XCTAssertEqual(
+                titleLabel?.text,
+                "\(color.displayName) (\(color.rawValue))",
+                "Title should match for color \(color.rawValue)"
+            )
         }
     }
     
@@ -378,10 +393,16 @@ final class MagicColorCheckboxViewTests: XCTestCase {
         for color in MagicColor.allCases {
             let sut = MagicColorCheckboxView(color: color)
             sut.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
-            let button = sut.findView(withAccessibilityIdentifier: "colorCheckbox_\(color.rawValue)") as? UIButton
-            let colorDot = button?.subviews.first(where: { $0.backgroundColor != nil && $0.layer.cornerRadius == 10 }) as? UIView
-            XCTAssertEqual(colorDot?.backgroundColor, color.uiColor, "Color dot should match for color \(color.rawValue)")
+            let identifier = "colorCheckbox\(color.accessibilityIdentifier)"
+            let button = sut.findView(withAccessibilityIdentifier: identifier) as? UIButton
+            let colorDot = button?.subviews.first(where: {
+                $0.backgroundColor != nil && $0.layer.cornerRadius == 10
+            }) as? UIView
+            XCTAssertEqual(
+                colorDot?.backgroundColor,
+                color.uiColor,
+                "Color dot should match for color \(color.rawValue)"
+            )
         }
     }
 }
-

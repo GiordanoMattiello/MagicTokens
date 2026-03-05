@@ -70,4 +70,3 @@ extension TokenFilterViewController: TokenFilterViewDelegate {
         viewModel.toggleColor(color, isSelected: isSelected)
     }
 }
-

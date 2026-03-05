@@ -19,12 +19,18 @@ final class TokenDisplayViewControllerTests: XCTestCase {
         viewContentMock = TokenDisplayViewMock()
         viewModelMock = TokenDisplayViewModelMock()
         idleTimerMock = IdleTimerMock()
-        sut = TokenDisplayViewController(contentView: viewContentMock, viewModel: viewModelMock, idleTimer: idleTimerMock)
+        sut = TokenDisplayViewController(
+            contentView: viewContentMock,
+            viewModel: viewModelMock,
+            idleTimer: idleTimerMock
+        )
     }
     
     func testViewDidLoadShouldSetNavigationTitle() {
         // Given
-        let navigationControllerMock = UINavigationController(rootViewController: sut)
+        let navigationControllerMock = UINavigationController(
+            rootViewController: sut
+        )
         
         // When
         sut.viewDidLoad()
@@ -68,7 +74,6 @@ final class TokenDisplayViewControllerTests: XCTestCase {
         // Then
         XCTAssertFalse(idleTimerMock.isIdleTimerDisabled)
     }
-    
     
     func testLoadViewShouldSetContentViewAsView() {
         // When

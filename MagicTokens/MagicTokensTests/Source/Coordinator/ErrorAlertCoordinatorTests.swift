@@ -68,7 +68,7 @@ final class ErrorAlertCoordinatorTests: XCTestCase {
         alertController?.tapButton(atIndex: 0)
         
         // Then
-        XCTAssertEqual(completionCallCount,1)
+        XCTAssertEqual(completionCallCount, 1)
     }
     
     func testPresentAlertWhenSecondaryActionTappedShouldCallSecondaryCompletion() {
@@ -86,6 +86,6 @@ final class ErrorAlertCoordinatorTests: XCTestCase {
         alertController?.tapButton(atIndex: 1)
         
         // Then
-        XCTAssertEqual(completionCallCount,1)
+        XCTAssertEqual(completionCallCount, 1)
     }
 }

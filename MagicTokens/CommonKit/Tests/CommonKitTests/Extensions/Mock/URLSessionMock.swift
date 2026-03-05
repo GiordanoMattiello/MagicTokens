@@ -14,7 +14,8 @@ public class URLSessionMock: URLSessionProtocol {
     var dataForReturnValue: (Data, URLResponse) = (Data(), HTTPURLResponse())
     var dataForError: Error?
     
-    public func data(for request: URLRequest, delegate: (any URLSessionTaskDelegate)?) async throws -> (Data, URLResponse) {
+    public func data(for request: URLRequest,
+                     delegate: (any URLSessionTaskDelegate)?) async throws -> (Data, URLResponse) {
         dataForCallCount += 1
         dataForReceivedRequest = request
         
