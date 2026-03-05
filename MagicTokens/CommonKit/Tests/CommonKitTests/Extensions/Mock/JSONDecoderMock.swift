@@ -27,7 +27,9 @@ final class JSONDecoderMock: JSONDecoderProtocol {
         if let returnValue = decodeReturnValue as? T {
             return returnValue
         } else {
-            throw NSError(domain: "Mock", code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not cast return value to expected type"])
+            throw NSError(domain: "Mock",
+                          code: -1,
+                          userInfo: [NSLocalizedDescriptionKey: "Could not cast return value to expected type"])
         }
     }
 }

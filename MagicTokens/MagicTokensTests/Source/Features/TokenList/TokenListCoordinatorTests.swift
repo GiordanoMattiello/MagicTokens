@@ -22,10 +22,10 @@ final class TokenListCoordinatorTests: XCTestCase {
     
     func testMakeTokenListScene() {
         // When
-        let vc = sut.makeTokenListScene()
+        let viewController = sut.makeTokenListScene()
         
         // Then
-        XCTAssertTrue(vc is TokenListViewController)
+        XCTAssertTrue(viewController is TokenListViewController)
         XCTAssertEqual(dependenciesMock.makeNetworkManagerCallCount, 1)
         XCTAssertEqual(dependenciesMock.makeImageCacheManagerCallCount, 1)
     }

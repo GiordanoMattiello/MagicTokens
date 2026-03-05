@@ -8,6 +8,7 @@
 @testable import MagicTokens
 
 extension TokenScryFall {
+    // swiftlint:disable:next function_body_length
     static func stub(
         object: String? = "card",
         id: String? = "id_123",

@@ -14,7 +14,10 @@ final class UICollectionViewMock: UICollectionView {
     var receivedIndexPath: IndexPath?
     var dequeueReusableCellReturnValue: UICollectionViewCell?
     
-    override func dequeueReusableCell(withReuseIdentifier identifier: String, for indexPath: IndexPath) -> UICollectionViewCell {
+    override func dequeueReusableCell(
+        withReuseIdentifier identifier: String,
+        for indexPath: IndexPath
+    ) -> UICollectionViewCell {
         dequeueReusableCellCallCount += 1
         receivedReuseIdentifier = identifier
         receivedIndexPath = indexPath

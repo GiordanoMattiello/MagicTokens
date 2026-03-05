@@ -80,9 +80,9 @@ final class TokenFilterViewTests: XCTestCase {
         sut.configure(model: model)
         
         // Then
-        let whiteCheckbox = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
-        let blueCheckbox = sut.findView(withAccessibilityIdentifier: "colorCheckbox_U") as? UIButton
-        let redCheckbox = sut.findView(withAccessibilityIdentifier: "colorCheckbox_R") as? UIButton
+        let whiteCheckbox = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
+        let blueCheckbox = sut.findView(withAccessibilityIdentifier: "colorCheckboxBlue") as? UIButton
+        let redCheckbox = sut.findView(withAccessibilityIdentifier: "colorCheckboxRed") as? UIButton
         
         XCTAssertNotNil(whiteCheckbox)
         XCTAssertNotNil(blueCheckbox)
@@ -214,7 +214,7 @@ final class TokenFilterViewTests: XCTestCase {
         }
         
         // When
-        let whiteCheckbox = sut.findView(withAccessibilityIdentifier: "colorCheckbox_W") as? UIButton
+        let whiteCheckbox = sut.findView(withAccessibilityIdentifier: "colorCheckboxWhite") as? UIButton
         whiteCheckbox?.sendActions(for: .touchUpInside)
         
         // Then
@@ -231,7 +231,8 @@ final class TokenFilterViewTests: XCTestCase {
         
         // Then
         for color in MagicColor.allCases {
-            let checkbox = sut.findView(withAccessibilityIdentifier: "colorCheckbox_\(color.rawValue)") as? UIButton
+            let identifier = "colorCheckbox\(color.accessibilityIdentifier)"
+            let checkbox = sut.findView(withAccessibilityIdentifier: identifier) as? UIButton
             XCTAssertNotNil(checkbox, "Checkbox for color \(color.rawValue) should exist")
         }
     }

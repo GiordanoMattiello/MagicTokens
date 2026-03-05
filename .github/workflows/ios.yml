@@ -38,12 +38,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Run SwiftLint
+        run: |
+          cd MagicTokens
+          echo "🔍 Running SwiftLint..."
+          swiftlint --strict
+
       - name: Build app
         run: |
           cd MagicTokens
           echo "🔨 Building app..."
           set -o pipefail
           if xcodebuild clean build \
+            -skipPackagePluginValidation \
             -project "MagicTokens.xcodeproj" \
             -scheme "MagicTokens" \
             -destination "platform=iOS Simulator,name=$IOS_SIMULATOR_NAME" \
@@ -54,7 +61,7 @@ jobs:
             echo "❌ Build failed!"
             exit 1
           fi
-  
+
   test:
     runs-on: macos-15
     needs: build
