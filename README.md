@@ -87,6 +87,13 @@ O projeto segue a arquitetura **MVVM-C (Model-View-ViewModel-Coordinator)**:
 ### Executar Testes
 - Para executar todos os testes: ⌘U
 
+### Qualidade de Código (SwiftLint)
+- O projeto utiliza **SwiftLint** para manter o padrão de código Swift.
+- O SwiftLint é executado automaticamente no pipeline de **CI** (GitHub Actions) no job `swiftlint`, que:
+  - Roda o `swiftlint` no diretório `MagicTokens`
+  - Gera um artefato `swiftlint-report` com o log completo de warnings
+- Warnings de lint **não quebram o build**, mas devem ser tratados aos poucos para manter a qualidade do código.
+
 ## 📋 TO DO / Melhorias Futuras
 
 ### Funcionalidades Pendentes
